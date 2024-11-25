@@ -47,13 +47,7 @@ Environments
 Install
 ==========
 
-If you want to get the latest update of MAENVS4VRP:
-
-.. code:: shell
-
-   pip install -U git+https://github.com/ricgama/maenvs4vrp.git
-
-If you want to develop MAENVS4VRP locally on your machine:
+If you want to install MAENVS4VRP locally on your machine:
 
 .. code:: shell
 
