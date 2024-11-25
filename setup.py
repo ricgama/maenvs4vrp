@@ -4,7 +4,7 @@ import sys
 import subprocess
 
 requirements = ['numpy==1.26.4', 'tqdm==4.66.1', 'pandas==2.1.3', 'ipykernel', 'ipywidgets', 
-                'matplotlib==3.7.1', 'jupyter==1.0.0', 'torch==2.2.0', 'tensorboard==2.13.0', 'scipy', 'wandb',
+                'matplotlib==3.7.1', 'jupyter==1.0.0', 'torch==2.2.0', 'tensorboard==2.13.0', 'scipy',
                 'ml_collections', 'pytest==7.4.3', 'tensordict', 'sphinx-math-dollar==1.2.1', 'nbsphinx==0.9.5', 'furo==2024.8.6', 'sphinx-copybutton==0.5.2']
 setup(
     name='maenvs4vrp',
