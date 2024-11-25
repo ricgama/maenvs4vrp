@@ -6,7 +6,7 @@ Multi Agent Environments for Vehicle Routing Problems
 
 MAENVS4VRP is a library made up of multi-agent environments for simulating classic vehicle routing problems.
 
-`Documentation <https://maenvs4vrp.readthedocs.io/en/latest/>`_ | `Install <#id13>`_ | `Quickstart Notebook <https://maenvs4vrp.readthedocs.io/en/latest/content/start.html>`_ | `Train your model <#training>`_ | `Paper <https://arxiv.org/abs/2411.14411>`_
+`Documentation <https://maenvs4vrp.readthedocs.io/en/latest/>`_ | `Install <#id13>`_ | `Quickstart Notebook <https://maenvs4vrp.readthedocs.io/en/latest/content/start.html>`_ | `Train Your Model <#training>`_ | `Paper <https://arxiv.org/abs/2411.14411>`_
 
 .. image:: https://colab.research.google.com/assets/colab-badge.svg
     :alt: Google Colab Badge
