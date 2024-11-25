@@ -27,25 +27,25 @@ Environments
      - Source
      - Description
    * - CVRPSTW (Capacitated Vehicle Routing Problem with Soft Time Windows)
-     - `Code <https://github.com/ricgama/maenvs4vrp_dev/tree/main/maenvs4vrp/environments/cvrpstw>`_
+     - `Code <https://github.com/ricgama/maenvs4vrp/tree/main/maenvs4vrp/environments/cvrpstw>`_
      - `Docs <https://www.google.com>`_
    * - CVRPTW (Capacitated Vehicle Routing Problem with Time Windows)
-     - `Code <https://github.com/ricgama/maenvs4vrp_dev/tree/main/maenvs4vrp/environments/cvrptw>`_
+     - `Code <https://github.com/ricgama/maenvs4vrp/tree/main/maenvs4vrp/environments/cvrptw>`_
      - `Docs <https://www.google.com>`_
    * - MDVRPTW (Multi-trip Vehicle Routing Problem with Time Windows)
      - `Code <https://www.google.com>`_
      - `Docs <https://www.google.com>`_
    * - PCVRPTW (Prize Collecting Vehicle Routing Problem with Time Windows)
-     - `Code <https://github.com/ricgama/maenvs4vrp_dev/tree/main/maenvs4vrp/environments/pcvrptw>`_
+     - `Code <https://github.com/ricgama/maenvs4vrp/tree/main/maenvs4vrp/environments/pcvrptw>`_
      - `Docs <https://www.google.com>`_
    * - PDPTW (Pickup and Delivery Problem with Time Windows)
-     - `Code <https://github.com/ricgama/maenvs4vrp_dev/tree/main/maenvs4vrp/environments/pdptw>`_
+     - `Code <https://github.com/ricgama/maenvs4vrp/tree/main/maenvs4vrp/environments/pdptw>`_
      - `Docs <https://www.google.com>`_
    * - SDVRPTW (Split Delivery Vehicle Routing Problem with Time Windows)
-     - `Code <https://github.com/ricgama/maenvs4vrp_dev/tree/main/maenvs4vrp/environments/sdvrptw>`_
+     - `Code <https://github.com/ricgama/maenvs4vrp/tree/main/maenvs4vrp/environments/sdvrptw>`_
      - `Docs <https://www.google.com>`_
    * - TOPTW (Team Orienteering Problem with Time Windows)
-     - `Code <https://github.com/ricgama/maenvs4vrp_dev/tree/main/maenvs4vrp/environments/toptw>`_
+     - `Code <https://github.com/ricgama/maenvs4vrp/tree/main/maenvs4vrp/environments/toptw>`_
      - `Docs <https://www.google.com>`_
 
 Install
