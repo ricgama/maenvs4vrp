@@ -4,13 +4,9 @@ MAENVS4VRP
 
 Multi Agent Environments for Vehicle Routing Problems
 
-
-Overview  
-========
-
 MAENVS4VRP is a library made up of multi-agent environments for simulating classic vehicle routing problems.
 
-Check out our `quickstart notebook <www.google.com>`_.
+`Documentation <https://maenvs4vrp.readthedocs.io/en/latest/>`_ | `Install <#id13>`_ | `Quickstart Notebook <https://maenvs4vrp.readthedocs.io/en/latest/content/start.html>`_ | `Train your model <#training>`_ | `Paper <https://arxiv.org/abs/2411.14411>`_
 
 .. image:: https://colab.research.google.com/assets/colab-badge.svg
     :alt: Google Colab Badge
@@ -28,25 +24,25 @@ Environments
      - Description
    * - CVRPSTW (Capacitated Vehicle Routing Problem with Soft Time Windows)
      - `Code <https://github.com/ricgama/maenvs4vrp/tree/master/maenvs4vrp/environments/cvrpstw>`_
-     - `Docs <https://www.google.com>`_
+     - `Docs <https://maenvs4vrp.readthedocs.io/en/latest/environments/cvrpstw/cvrpstw.html>`_
    * - CVRPTW (Capacitated Vehicle Routing Problem with Time Windows)
      - `Code <https://github.com/ricgama/maenvs4vrp/tree/master/maenvs4vrp/environments/cvrptw>`_
-     - `Docs <https://www.google.com>`_
+     - `Docs <https://maenvs4vrp.readthedocs.io/en/latest/environments/cvrptw/cvrptw.html>`_
    * - MDVRPTW (Multi-trip Vehicle Routing Problem with Time Windows)
-     - `Code <https://www.google.com>`_
-     - `Docs <https://www.google.com>`_
+     - `Code <https://github.com/ricgama/maenvs4vrp/tree/master/maenvs4vrp/environments/mdvrptw>`_
+     - `Docs <https://maenvs4vrp.readthedocs.io/en/latest/environments/mdvrptw/mdvrptw.html>`_
    * - PCVRPTW (Prize Collecting Vehicle Routing Problem with Time Windows)
      - `Code <https://github.com/ricgama/maenvs4vrp/tree/master/maenvs4vrp/environments/pcvrptw>`_
-     - `Docs <https://www.google.com>`_
+     - `Docs <https://maenvs4vrp.readthedocs.io/en/latest/environments/pcvrptw/pcvrptw.html>`_
    * - PDPTW (Pickup and Delivery Problem with Time Windows)
      - `Code <https://github.com/ricgama/maenvs4vrp/tree/master/maenvs4vrp/environments/pdptw>`_
-     - `Docs <https://www.google.com>`_
+     - `Docs <https://maenvs4vrp.readthedocs.io/en/latest/environments/pdptw/pdptw.html>`_
    * - SDVRPTW (Split Delivery Vehicle Routing Problem with Time Windows)
      - `Code <https://github.com/ricgama/maenvs4vrp/tree/master/maenvs4vrp/environments/sdvrptw>`_
-     - `Docs <https://www.google.com>`_
+     - `Docs <https://maenvs4vrp.readthedocs.io/en/latest/environments/sdvrptw/sdvrptw.html>`_
    * - TOPTW (Team Orienteering Problem with Time Windows)
      - `Code <https://github.com/ricgama/maenvs4vrp/tree/master/maenvs4vrp/environments/toptw>`_
-     - `Docs <https://www.google.com>`_
+     - `Docs <https://maenvs4vrp.readthedocs.io/en/latest/environments/toptw/toptw.html>`_
 
 Install
 ==========
@@ -116,6 +112,8 @@ Directory Tree Structure
 
 Citation
 ===============
+
+If you want to include MAENVS4VRP in your publications, you can use:
 
 .. code-block:: bibtex
 
