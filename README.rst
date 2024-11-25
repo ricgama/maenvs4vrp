@@ -119,7 +119,7 @@ Citation
 
 .. code-block:: bibtex
 
-    @article{gama2024maenv4vrp,
+    @article{gama2024maenvs4vrp,
       title={Multi-Agent Environments for Vehicle Routing Problems},
       author={Ricardo Gama and Daniel Fuertes and Carlos R. del-Blanco and Hugo L. Fernandes},
       year={2024},
