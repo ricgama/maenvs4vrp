@@ -9,7 +9,7 @@ requirements = ['numpy==1.26.4', 'tqdm==4.66.1', 'pandas==2.1.3', 'ipykernel', '
 setup(
     name='maenvs4vrp',
     packages=find_packages(where=['maenvs4vrp']),
-    python_requires='>=3.11, <4',
+    python_requires='>=3.10, <4',
     install_requires=requirements,
     version='0.1.0',
     description='Multi Agent Environments for Vehicle Routing Problems',
