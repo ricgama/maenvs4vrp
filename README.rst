@@ -15,7 +15,7 @@ MAENVS4VRP is a library made up of multi-agent environments for simulating class
 Environments
 ============
 
-.. list-table:: List of Vehicle Routing Environments :
+.. list-table:: List of Vehicle Routing Environments:
    :widths: 25 5 5
    :header-rows: 1
 
