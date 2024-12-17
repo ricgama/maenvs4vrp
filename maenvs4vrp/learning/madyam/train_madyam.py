@@ -28,8 +28,8 @@ import torch.nn.functional as F
 
 import importlib
 
-from maenvs4vrp.learning.mardam.layers import reinforce_loss
-from maenvs4vrp.learning.our_net.policy_net_ma_ac_v1 import Learner
+from maenvs4vrp.learning.madyam.layers import reinforce_loss
+from maenvs4vrp.learning.madyam.policy_net_ma_ac import Learner
 
 def save_model_state_dict(save_path, model_policy):
     # save the policy state dict 
