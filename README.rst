@@ -202,13 +202,3 @@ Acknowledgements
 =================
 MAEnvs4VRP has been inspired by, and benefits from, the ideas and tooling of the broader open-source community. In particular, we would like to thank `PettingZoo <https://www.pettingzoo.ml/>`_, 
 `Flatland <https://github.com/flatland-association/flatland-rl/>`_, `MARDAM <https://gitlab.inria.fr/gbono/mardam>`_, `RL4CO <https://rl4co.readthedocs.io/en/latest//>`_, `RoutFinder <https://github.com/ai4co/routefinder/tree/main//>`_, `PyVRP <https://pyvrp.org//>`_ .
-
-
-TODO List
-=================
-
-1. confirm tensor dimensions and standardize (e.g. change depot_idx from (batch, 1) to (batch) , dones, etc.)
-2. include cur_node_idx in old envs
-3. include check_solution_validity method
-4. include new envs in docs
-5. review key names (try to standardize names with those used in RL4CO).
