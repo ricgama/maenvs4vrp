@@ -6,7 +6,7 @@ Benchmark Instance Generation
 
 MDVRPTW environment instances are introduced in [Vid2013]_:
 
-Benchmark instances generation settings are defined in file ``benchmark_instances_generator.py``.
+Benchmark instance generation settings are defined in file ``benchmark_instances_generator.py``.
 
 Data files format
 -------------------
@@ -83,26 +83,8 @@ BenchmarkInstanceGenerator
 ---------------------------------
 
 .. autoclass:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.__init__
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.get_list_of_benchmark_instances
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.read_instance_data
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.parse_instance_data
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.get_instance 
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.load_set_of_instances
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_first_n_services
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.random_sample_instance
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_name_from_set
-
-.. autofunction:: maenvs4vrp.environments.mdvrptw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_instance
+    :members:
+    :special-members: __init__
 
 **References**
 

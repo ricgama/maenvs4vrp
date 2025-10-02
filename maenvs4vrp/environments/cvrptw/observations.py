@@ -8,7 +8,8 @@ from typing import Optional, Dict
 
 
 class Observations(ObservationBuilder):
-    """CVRPTW observations class.
+    """
+    CVRPTW observations class.
     """
 
     POSSIBLE_NODES_STATIC_FEATURES = ['x_coordinate', 'y_coordinate', 'tw_low',
@@ -28,8 +29,7 @@ class Observations(ObservationBuilder):
                                     'frac_current_load', 'dist2depot_div_end_time', 
                                     'dist2agent_div_end_time', 'frac_feasible_nodes','time_delta2agent_div_max_dur', 'was_last']
 
-    POSSIBLE_GLOBAL_FEATURES = [ 'frac_demands', 'frac_fleet_load_capacity',
-                                'frac_done_agents']
+    POSSIBLE_GLOBAL_FEATURES = ['frac_fleet_load_capacity', 'frac_done_agents']
 
 
     def __init__(self, feature_list:Dict = None):
@@ -40,6 +40,8 @@ class Observations(ObservationBuilder):
         Args:
             feature_list(Dict): Dictionary containing observation features list to be available to the agent. Defaults to None.
 
+        Returns:
+            None.
         """
 
         self.default_feature_list = {'nodes_static': {'x_coordinate': {'feat': 'x_coordinate', 'norm': None},
@@ -71,7 +73,7 @@ class Observations(ObservationBuilder):
                                         'dist2agent_div_end_time',
                                         'time_delta2agent_div_max_dur',
                                         'was_last'],
-                                    'global': ['frac_demands', 'frac_fleet_load_capacity', 'frac_done_agents']}
+                                    'global': [ 'frac_fleet_load_capacity', 'frac_done_agents']}
 
         if feature_list is None:
             feature_list = self.default_feature_list
@@ -701,18 +703,6 @@ class Observations(ObservationBuilder):
         feat = self.env.td_state['agents']['active_agents_mask'].sum(dim=1).unsqueeze(1)
         return 1 - (feat / self.env.num_agents)
 
-    def get_feat_global_frac_demands(self):
-        """
-        Fraction of served demands.
-
-        Args:
-            n/a.
-
-        Returns: 
-            torch.Tensor: Fraction of served demands.
-        """
-        feat = self.env.td_state['nodes']['cur_demands'].sum(dim=-1).unsqueeze(1)
-        return feat / self.env.td_state['demands'].sum(dim=-1).unsqueeze(1)
 
     def get_feat_global_frac_fleet_load_capacity(self):
         """

@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'sdvrptw/data/generated'
 
 class ToyInstanceGenerator(InstanceBuilder):
     """
-    SDVRPTW toys instance generation class.
+    SDVRPTW toy instance generation class.
     """
         
     def __init__(self, 

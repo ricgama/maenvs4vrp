@@ -4,9 +4,9 @@
 MDVRPTW
 =================
 
-Multi-trip Vehicle Routing Problem with Time Windows (MTVRPTW)
+Multi-Depot Vehicle Routing Problem with Time Windows (MTVRPTW)
 
-The Multi-trip Vehicle Routing Problem with Time Windows (MTVRPTW) is a generalization of the CVRPTW where each vehicle is allowed to make multiple departures from depot, but forcing them to end before time $t_{end}$.
+The Multi-depot Vehicle Routing Problem with Time Windows (MDVRPTW) is a generalization of the CVRPTW with multiple depots. Each depot has its own set of vehicles that depart and must return to it.
 
 Here's everything about MTVRPTW environment:
 

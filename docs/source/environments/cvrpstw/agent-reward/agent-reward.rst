@@ -14,12 +14,8 @@ Dense Reward
 At every step, the reward is the negative distance traveled by the agent plus the penalty for early and late time window arrival. At the end of the episode, a penalty is given equaling $10$ times the negative distance from the depot to the not attended services.
 
 .. autoclass:: maenvs4vrp.environments.cvrpstw.env_agent_reward.DenseReward
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.env_agent_reward.DenseReward.__init__
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.env_agent_reward.DenseReward.set_env
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.env_agent_reward.DenseReward.get_reward
+    :members:
+    :special-members: __init__
 
 Sparse Reward
 ----------------
@@ -28,9 +24,5 @@ The reward is 0 in all steps except the last. At the end of the episode, the rew
 The penalty for a not-performed service is $10$ times the distance from the depot to that service.
 
 .. autoclass:: maenvs4vrp.environments.cvrpstw.env_agent_reward.SparseReward
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.env_agent_reward.SparseReward.__init__
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.env_agent_reward.SparseReward.set_env
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.env_agent_reward.SparseReward.get_reward
+    :members:
+    :special-members: __init__

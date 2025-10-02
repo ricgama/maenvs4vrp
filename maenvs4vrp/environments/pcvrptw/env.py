@@ -10,6 +10,7 @@ from maenvs4vrp.core.env_observation_builder import ObservationBuilder
 from maenvs4vrp.core.env_agent_selector import BaseSelector
 from maenvs4vrp.core.env_agent_reward import RewardFn
 from maenvs4vrp.core.env import AECEnv
+from maenvs4vrp.utils.utils import gather_by_index
 
 
 class Environment(AECEnv):
@@ -94,10 +95,10 @@ class Environment(AECEnv):
         Compute a random action from avaliable actions to current agent.
         
         Args:
-            td(TensorDict): Tensor environment instance.
+            td(TensorDict): Environment instance tensor.
 
         Returns:
-            td(TensorDict): Tensor environment instance with updated action.
+            td(TensorDict): Environment instance tensor with updated action.
         """
         action = torch.multinomial(self.td_state['cur_agent']["action_mask"].float(), 1).to(self.device)
         td['action'] = action
@@ -116,7 +117,7 @@ class Environment(AECEnv):
               n_augment: Optional[int] = None,
               seed:int|None=None)-> TensorDict:
         """
-        Reset the environment and load agent information into dictionary.
+        Reset the environment.
 
         Args:
             num_agents(int, optional): Total number of agents. Defaults to None.
@@ -198,6 +199,7 @@ class Environment(AECEnv):
                                     batch_size=batch_size, device=self.device)
 
         self.td_state['cur_agent_idx'] = torch.zeros((*batch_size, 1), dtype = torch.int64, device=self.device)
+        self.td_state['cur_node_idx'] = self.td_state['depot_idx'].clone()
 
         self.td_state['cur_agent'] = TensorDict({
                                 'action_mask': self.td_state['agents']['feasible_nodes'].gather(1, self.td_state['cur_agent_idx'][:,:,None].expand(-1, -1, self.num_nodes)).squeeze(1),
@@ -229,6 +231,7 @@ class Environment(AECEnv):
                 "agent_step": agent_step,
                 "observations": td_observations,
                 "cur_agent_idx":self.td_state['cur_agent_idx'].clone(),
+                "cur_node_idx": self.td_state['cur_node_idx'].clone(),
                 "reward": reward,
                 "penalty":penalty,
                 "done": done,
@@ -296,7 +299,7 @@ class Environment(AECEnv):
 
     def _update_state(self, action):
         """
-        Update agent state.
+        Update environment state.
 
         Args:
             action(torch.Tensor): Tensor with agent moves.
@@ -359,10 +362,9 @@ class Environment(AECEnv):
         self.td_state['cur_agent']['cur_step'] = torch.where(~agents_done, self.td_state['cur_agent']['cur_step']+1, 
                                                              self.td_state['cur_agent']['cur_step'])
         self.td_state['agents']['cur_step'].scatter_(1, self.td_state['cur_agent_idx'], self.td_state['cur_agent']['cur_step'])
-
+        self.td_state['cur_node_idx'] = action.clone()
         # if all done activate first agent to guarantee batch consistency during agent sampling
         self.td_state['agents']['active_agents_mask'][self.td_state['agents']['active_agents_mask'].sum(1).eq(0), 0] = True
-        self._update_feasibility()
 
     def _update_cur_agent(self, cur_agent_idx):
         """
@@ -414,10 +416,10 @@ class Environment(AECEnv):
         Perform an environment step for active agent.
 
         Args:
-            td(TensorDict): Tensor environment instance.
+            td(TensorDict): Environment tensor instance.
 
         Returns:
-            td(TensorDict): Updated tensor environment instance.
+            td(TensorDict): Updated environment tensor instance.
         """
         action = td["action"]
         assert self.td_state['cur_agent']['action_mask'].gather(1, action).all(), f"not feasible action"
@@ -449,10 +451,64 @@ class Environment(AECEnv):
                 "observations": td_observations,
                 "reward": reward,
                 "penalty":penalty,  
-                "cur_agent_idx":cur_agent_idx,              
+                "cur_agent_idx":cur_agent_idx, 
+                "cur_node_idx": self.td_state['cur_node_idx'].clone(),             
                 "done": done,
                 "is_last_step": is_last_step
             },
         )
         return td
 
+    def check_solution_validity(self):
+        """
+        Check if solution is valid according to constraints.
+
+        Args:
+            N/a.
+
+        Returns:
+            None.
+        """
+
+        distance2depot = torch.pairwise_distance(self.td_state['coords'], self.td_state['coords'][..., 0:1, :], eps=0, keepdim=False)
+        a = self.td_state['tw_low'] + distance2depot + self.td_state['service_time']  # Time to serve node and get back to depot
+        b = self.td_state['tw_high'][:, 0, None]  # Depot late tw
+
+        # Can agent serve node and get back to depot?
+        assert torch.all(a <= b), "Agent cannot serve node and get back to depot."
+
+        curr_node = torch.zeros(*self.batch_size, dtype=torch.int64, device=self.device)
+        curr_time = torch.zeros(*self.batch_size, dtype=torch.float32, device=self.device)
+        visited_nodes = torch.zeros(*self.batch_size, self.num_nodes, dtype=torch.int64, device=self.device)
+        curr_load = torch.ones(*self.batch_size, dtype=torch.float32, device=self.device) * self.td_state['capacity']
+
+        # Sort indices along each row
+        sorted_indices = torch.argsort(self.td_state['solution']['agents'], dim=-1, stable=True)
+        # Use gather to reorder data per row
+        sorted_data = torch.gather(self.td_state['solution']['actions'], dim=-1, index=sorted_indices)
+
+        demand = self.td_state['demands'].gather(1, sorted_data)
+
+        for ii in range(sorted_data.size(1)):
+            next_node = sorted_data[:, ii]
+            curr_loc = gather_by_index(self.td_state['coords'], curr_node)
+            next_loc = gather_by_index(self.td_state['coords'], next_node)
+            dist = torch.pairwise_distance(curr_loc, next_loc, eps=0, keepdim=False)
+
+            fill = visited_nodes.gather(1, next_node.unsqueeze(-1))
+            visited_nodes.scatter_(1, next_node.unsqueeze(-1), fill + 1)
+
+            curr_time = torch.max(curr_time + dist, gather_by_index(self.td_state['tw_low'], next_node))
+            assert torch.all(curr_time <= gather_by_index(self.td_state['tw_high'], next_node)), "Agent must perform service before node's time window closes."
+
+            curr_time = curr_time + gather_by_index(self.td_state['service_time'], next_node)
+            curr_node = next_node
+            curr_time[next_node == 0] = 0.0
+
+            # Capacity constraint
+            curr_load = torch.where(next_node == 0, self.td_state['capacity'], curr_load - demand[:, ii])
+            assert torch.all(curr_load >= 0), "Agent capacity exceeded."
+            curr_load[next_node == 0] = self.td_state['capacity']
+
+        visited_nodes_exc_depot = visited_nodes[:, 1:]
+        assert torch.all((visited_nodes_exc_depot == 0) | (visited_nodes_exc_depot == 1)), "Nodes were visited more than once!"

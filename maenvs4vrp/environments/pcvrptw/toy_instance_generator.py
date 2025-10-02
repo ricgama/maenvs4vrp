@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'pcvrptw/data/generated'
 
 class ToyInstanceGenerator(InstanceBuilder):
     """
-    PCVRPTW toys instance generation class.
+    PCVRPTW toy instance generation class.
     """
         
     def __init__(self, 

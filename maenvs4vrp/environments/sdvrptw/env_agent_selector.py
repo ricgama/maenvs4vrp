@@ -122,7 +122,7 @@ class SmallestTimeAgentSelector(BaseSelector):
 
     def _next_agent(self):
         """
-        Returns the next agent.
+        Return the next agent.
 
         Args:
             n/a.

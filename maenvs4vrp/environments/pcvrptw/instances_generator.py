@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'pcvrptw/data/generated'
 
 class InstanceGenerator(InstanceBuilder):
     """
-    PCVRPTW instances generation class.
+    PCVRPTW instance generation class.
     """
     @classmethod
     def get_list_of_benchmark_instances(cls):
@@ -328,7 +328,8 @@ class InstanceGenerator(InstanceBuilder):
                 instance[key] = instance_info_s['data'][key].repeat(n_augment, 1, 1)
             elif len(instance_info_s['data'][key].shape) == 2:
                 instance[key] = instance_info_s['data'][key].repeat(n_augment, 1)
-
+            elif len(instance_info_s['data'][key].shape) == 1:
+                instance[key] = instance_info_s['data'][key].repeat(n_augment)
 
         instance_info = {'name':'random_instance',
                          'num_nodes': self.max_num_nodes,

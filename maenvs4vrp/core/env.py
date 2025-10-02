@@ -9,13 +9,6 @@ from typing import Any, Dict, Iterable, Iterator, TypeVar, Tuple, Optional
 import torch
 from tensordict.tensordict import TensorDict
 
-ObsType = TypeVar("ObsType")
-ActionType = TypeVar("ActionType")
-AgentID = str
-
-ObsDict = Dict[AgentID, ObsType]
-ActionDict = Dict[AgentID, ActionType]
-
 class AECEnv():
     """
     Environment base class.     
@@ -29,7 +22,7 @@ class AECEnv():
             reward_evaluator: RewardFn,
             seed:int = None,               
             device: Optional[str] = None,
-            batch_size: torch.Size = None,
+            batch_size: Optional[torch.Size] = None,
             ):        
         """
         Constructor
@@ -97,12 +90,12 @@ class AECEnv():
         self.rng = rng
 
 
-    def observe(self, agent_name:AgentID)-> TensorDict:
+    def observe(self, is_reset=False)-> TensorDict:
         """
         Compute the environment.
 
         Args:
-            agent_name(AgentID): Current agent.
+            is_reset(bool): If the environment is on reset. Defauts to False.
 
         Returns
             TensorDict: Current agent observaions and masks dictionary.
@@ -110,12 +103,12 @@ class AECEnv():
         raise NotImplementedError()
 
 
-    def sample_action(self, agent_name:AgentID)-> TensorDict:
+    def sample_action(self, td: TensorDict)-> TensorDict:
         """
         Compute a random action from avaliable actions to current agent.
         
         Args:
-            agent_name(AgentID): Current agent.
+            td(TensorDict): Environment instance tensor.
 
         Returns:
             TensorDict: Tensor environment instance with updated action.
@@ -135,15 +128,42 @@ class AECEnv():
         raise NotImplementedError()
 
 
-    def step(self, action:ActionType)-> TensorDict:
+    def step(self, td: TensorDict) -> TensorDict:
         """
         Perform an environment step for active agent.
 
         Args:
-            action(ActionType): Action to perform.
+            td(TensorDict): Environment tensor instance.
 
         Returns:
             TensorDict: Updated tensor environment instance.
 
         """
         raise NotImplementedError()
+    
+    def _get_current_instance_data(self) -> dict[str, dict[str, torch.Tensor] | str]:
+        """
+        Return a lightweight, plotting-friendly view of the current instance.
+
+        Expected to include at least:
+          - 'data': a dict with tensors such as 'coords' (shape [B, N, 2] or [N, 2]),
+                    'is_depot' or 'depot_idx' if available, and any other fields
+                    listed in self.instance_data_keys.
+          - 'name': a human-friendly instance name.
+
+        This structure is consumed by plotting utilities like plot_instance_coords.
+        """
+        instance = {"name": getattr(self, "instance_name", f"{self.env_name.upper()}-Instance"), "data": {}}
+        keys = getattr(self, "instance_data_keys", None)
+
+        # If instance_data_keys is not defined, fall back to common fields.
+        if keys is None:
+            keys = []
+            for k in ("coords", "is_depot", "depot_idx"):
+                if k in self.td_state:
+                    keys.append(k)
+
+        for k in keys:
+            if k in self.td_state:
+                instance["data"][k] = self.td_state[k]
+        return instance

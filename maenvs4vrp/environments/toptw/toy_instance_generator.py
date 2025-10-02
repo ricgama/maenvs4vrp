@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'toptw/data/generated'
 
 class ToyInstanceGenerator(InstanceBuilder):
     """
-    TOPTW toys instance generation class.
+    TOPTW toy instance generation class.
     """
         
     def __init__(self, 

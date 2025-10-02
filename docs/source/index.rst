@@ -38,19 +38,35 @@ If you want to have a grasp of the basics about the library, you can check our `
     
     environments/cvrpstw/cvrpstw
     environments/cvrptw/cvrptw
+    environments/dsvrptw/dsvrptw
+    environments/dvrptw/dvrptw
+    environments/gmtdvrp/gmtdvrp
+    environments/gmtvrp/gmtvrp
     environments/htop/htop
+    environments/mtdvrp/mtdvrp
     environments/mdvrptw/mdvrptw
+    environments/mtvrp/mtvrp
     environments/pcvrptw/pcvrptw
     environments/pdptw/pdptw
     environments/sdvrptw/sdvrptw
     environments/top/top
     environments/toptw/toptw
-    
+
 .. toctree::
     :maxdepth: 2
     :hidden:
+    :caption: Utils
+
+    utils/plotting
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+    :titlesonly:
     :caption: Tutorials
 
-    notebooks/instance_generator.ipynb
-    notebooks/observations.ipynb
-    notebooks/agent_iteration.ipynb
+    notebooks/1.0.0_quickstart_cvrptw.ipynb
+    notebooks/2.0.0_maenvs4vrp_exploration_and_challenges.ipynb
+    notebooks/3.0.0_multitask_environments.ipynb
+    notebooks/4.0.0_maenvs4vrp_stochastic_environments.ipynb
+    notebooks/5.0.0_PyVRP_cvrptw_solver.ipynb

@@ -94,10 +94,10 @@ class Environment(AECEnv):
         Compute a random action from avaliable actions to current agent.
         
         Args:
-            td(TensorDict): Tensor environment instance.
+            td(TensorDict): Environment instance tensor.
 
         Returns:
-            td(TensorDict): Tensor environment instance with updated action.
+            td(TensorDict): Environment instance tensor with updated action.
         """
         action = torch.multinomial(self.td_state['cur_agent']["action_mask"].float(), 1).to(self.device)
         td['action'] = action
@@ -115,7 +115,7 @@ class Environment(AECEnv):
               n_augment: Optional[int] = None,
               seed:int|None=None)-> TensorDict:
         """
-        Reset the environment and load agent information into dictionary.
+        Reset the environment.
 
         Args:
             num_agents(int, optional): Total number of agents. Defaults to None.
@@ -199,6 +199,7 @@ class Environment(AECEnv):
                                     batch_size=batch_size, device=self.device)
 
         self.td_state['cur_agent_idx'] = torch.zeros((*batch_size, 1), dtype = torch.int64, device=self.device)
+        self.td_state['cur_node_idx'] = self.td_state['depot_idx'].clone()
 
         self.td_state['cur_agent'] = TensorDict({
                                 'action_mask': self.td_state['agents']['feasible_nodes'].gather(1, self.td_state['cur_agent_idx'][:,:,None].expand(-1, -1, self.num_nodes)).squeeze(1),
@@ -229,6 +230,7 @@ class Environment(AECEnv):
                 "agent_step": agent_step,
                 "observations": td_observations,
                 "cur_agent_idx":self.td_state['cur_agent_idx'].clone(),
+                "cur_node_idx": self.td_state['cur_node_idx'].clone(),
                 "reward": reward,
                 "penalty":penalty,
                 "done": done,
@@ -303,7 +305,7 @@ class Environment(AECEnv):
 
     def _update_state(self, action):
         """
-        Update agent state.
+        Update environment state.
 
         Args:
             action(torch.Tensor): Tensor with agent moves.
@@ -377,10 +379,9 @@ class Environment(AECEnv):
         self.td_state['cur_agent']['cur_step'] = torch.where(~agents_done, self.td_state['cur_agent']['cur_step']+1, 
                                                              self.td_state['cur_agent']['cur_step'])
         self.td_state['agents']['cur_step'].scatter_(1, self.td_state['cur_agent_idx'], self.td_state['cur_agent']['cur_step'])
-
+        self.td_state['cur_node_idx'] = action.clone()
         # if all done activate first agent to guarantee batch consistency during agent sampling
         self.td_state['agents']['active_agents_mask'][self.td_state['agents']['active_agents_mask'].sum(1).eq(0), 0] = True
-        self._update_feasibility()
 
     def _update_cur_agent(self, cur_agent_idx):
         """
@@ -431,10 +432,10 @@ class Environment(AECEnv):
         Perform an environment step for active agent.
 
         Args:
-            td(TensorDict): Tensor environment instance.
+            td(TensorDict): Environment tensor instance.
 
         Returns:
-            td(TensorDict): Updated tensor environment instance.
+            td(TensorDict): Updated environment tensor instance.
         """
         action = td["action"]
         assert self.td_state['cur_agent']['action_mask'].gather(1, action).all(), f"not feasible action"
@@ -466,10 +467,23 @@ class Environment(AECEnv):
                 "observations": td_observations,
                 "reward": reward,
                 "penalty":penalty,  
-                "cur_agent_idx":cur_agent_idx,              
+                "cur_agent_idx":cur_agent_idx,
+                "cur_node_idx": self.td_state['cur_node_idx'].clone(),              
                 "done": done,
                 "is_last_step": is_last_step
             },
         )
         return td
 
+    def check_solution_validity(self):
+
+        """
+        Check if solution is valid.
+
+        Args:
+            N7a.
+
+        Returns:
+            None.
+        """
+        raise NotImplementedError()

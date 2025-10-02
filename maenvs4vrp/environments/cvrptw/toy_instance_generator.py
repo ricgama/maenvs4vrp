@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'cvrptw/data/generated'
 
 class ToyInstanceGenerator(InstanceBuilder):
     """
-    CVRPTW toys instance generation class.
+    CVRPTW toy instance generation class.
     """
         
     def __init__(self, 

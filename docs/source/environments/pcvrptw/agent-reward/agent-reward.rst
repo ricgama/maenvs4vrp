@@ -14,12 +14,8 @@ Dense Reward
 At every step, the reward is the negative distance traveled plus the client prize collected by the agent.
 
 .. autoclass:: maenvs4vrp.environments.pcvrptw.env_agent_reward.DenseReward
-
-.. autofunction:: maenvs4vrp.environments.pcvrptw.env_agent_reward.DenseReward.__init__
-
-.. autofunction:: maenvs4vrp.environments.pcvrptw.env_agent_reward.DenseReward.set_env
-
-.. autofunction:: maenvs4vrp.environments.pcvrptw.env_agent_reward.DenseReward.get_reward
+    :members:
+    :special-members: __init__
 
 Sparse Reward
 ----------------
@@ -27,9 +23,5 @@ Sparse Reward
 The reward is 0 in all steps except the last. At the end of the episode, the reward is the negative of the sum of the distances of the routes traveled plus the sum of all agents collected prizes.
 
 .. autoclass:: maenvs4vrp.environments.pcvrptw.env_agent_reward.SparseReward
-
-.. autofunction:: maenvs4vrp.environments.pcvrptw.env_agent_reward.SparseReward.__init__
-
-.. autofunction:: maenvs4vrp.environments.pcvrptw.env_agent_reward.SparseReward.set_env
-
-.. autofunction:: maenvs4vrp.environments.pcvrptw.env_agent_reward.SparseReward.get_reward
+    :members:
+    :special-members: __init__

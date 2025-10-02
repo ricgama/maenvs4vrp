@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'mdvrptw/data/generated'
 
 class ToyInstanceGenerator(InstanceBuilder):
     """
-    MDVRPTW toys instance generation class.
+    MDVRPTW toy instance generation class.
     """
         
     def __init__(self, 
