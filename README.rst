@@ -15,8 +15,9 @@ MAEnvs4VRP is a library made up of multi-agent environments for simulating class
 What's NEW!
 =====================
 
-- [2025/10] six new environments: DVRPTW, DSVRPTW, MTVRP, MTDVRP, GMTVRP and GMTDVRP.
-- [2025/10] three new hands-on notebook tutorials.
+- Added six new environments: **DVRPTW**, **DSVRPTW**, **MTVRP**, **MTDVRP**, **GMTVRP**, and **GMTDVRP**  
+- Introduced three new hands-on Jupyter notebook tutorials  
+- Integrated plotting tools for visualization and analysis 
 
 
 Environments
