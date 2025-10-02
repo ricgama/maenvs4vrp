@@ -1,8 +1,8 @@
 ===========
-MAENVS4VRP
+MAEnvs4VRP
 ===========
 
-MAENVS4VRP is a library made up of multi-agent environments for simulating classic vehicle routing problems.
+MAEnvs4VRP is a library made up of multi-agent environments for simulating classic vehicle routing problems.
 The library provides:
 
 * A flexible modular architecture.
@@ -27,7 +27,7 @@ If you want to have a grasp of the basics about the library, you can check our `
 .. toctree::
     :maxdepth: 2
     :hidden:
-    :caption: MAENVS4VRP Architecture
+    :caption: MAEnvs4VRP Architecture
 
     core/modules
 
