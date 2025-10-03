@@ -328,7 +328,7 @@ class Environment(AECEnv):
 
         if self.n_digits is not None:
             dist2j = torch.floor(self.n_digits * dist2j) / self.n_digits
-
+            
         time2j = dist2j / self._sample_speed()
 
         tw = self.td_state['tw_low'].gather(1, action)
