@@ -202,4 +202,5 @@ You can **open an issue** here on GitHub or **drop us an email** — we’d love
 Acknowledgements
 =================
 MAEnvs4VRP has been inspired by, and benefits from, the ideas and tooling of the broader open-source community. In particular, we would like to thank `PettingZoo <https://www.pettingzoo.ml/>`_, 
-`Flatland <https://github.com/flatland-association/flatland-rl/>`_, `MARDAM <https://gitlab.inria.fr/gbono/mardam>`_, `RL4CO <https://rl4co.readthedocs.io/en/latest//>`_, `RoutFinder <https://github.com/ai4co/routefinder/tree/main//>`_, `PyVRP <https://pyvrp.org//>`_ .
+`Flatland <https://github.com/flatland-association/flatland-rl/>`_, `MARDAM <https://gitlab.inria.fr/gbono/mardam>`_, `RL4CO <https://rl4co.readthedocs.io/en/latest//>`_, `RoutFinder <https://github.com/ai4co/routefinder/tree/main//>`_, `PyVRP <https://pyvrp.org//>`_ , `tensordict
+ <https://github.com/pytorch/tensordict//>`_.
