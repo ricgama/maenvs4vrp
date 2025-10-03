@@ -121,8 +121,8 @@ class Environment(AECEnv):
         Returns:
             speed(torch.Tensor): Sampled speed tensor.
         """
-        late = torch.empty((*self.batch_size, 1)).bernoulli_(self.late_p)
-        rand = torch.randn_like(late)
+        late = torch.empty((*self.batch_size, 1)).bernoulli_(self.late_p).to(self.device)
+        rand = torch.randn_like(late).to(self.device)
         speed = late * self.slow_down * (1 + self.late_var * rand) + (1-late) * (1 + self.speed_var * rand)
         return speed.clamp_(min = 0.1) * self.veh_speed
 
