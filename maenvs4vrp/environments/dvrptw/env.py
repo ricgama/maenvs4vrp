@@ -467,7 +467,6 @@ class Environment(AECEnv):
 
         curr_node = torch.zeros(*self.batch_size, dtype=torch.int64, device=self.device)
         curr_time = torch.zeros(*self.batch_size, dtype=torch.float32, device=self.device)
-        curr_load = self.td_state['capacity'].clone()
         visited_nodes = torch.zeros(*self.batch_size, self.num_nodes, dtype=torch.int64, device=self.device)
 
         sorted_indices = torch.argsort(self.td_state['solution']['agents'], dim=-1, stable=True)
@@ -496,8 +495,6 @@ class Environment(AECEnv):
             assert torch.all(service_startj <= tw_high), "Service started after allowed time window."
             # c2: must be able to finish service and return to depot before end_time
             assert torch.all(service_startj + service_time + time2depot <= end_time.unsqueeze(-1)), "Cannot finish service and return to depot in time."
-            # c3: capacity constraint
-            assert torch.all(demand[:, ii] <= curr_load), "Agent exceeded vehicle capacity."
 
             # Mark node as visited
             fill = visited_nodes.gather(1, next_node.unsqueeze(-1))
@@ -505,10 +502,17 @@ class Environment(AECEnv):
 
             # Update time and load
             curr_time = torch.max(arrivej, tw_low) + service_time
-            curr_load = torch.where(next_node == 0, self.td_state['capacity'], curr_load - demand[:, ii])
             curr_node = next_node
             curr_time[next_node == 0] = 0.0
-            curr_load[next_node == 0] = self.td_state['capacity'].squeeze(-1)
 
         visited_nodes_exc_depot = visited_nodes[:, 1:]
         assert torch.all((visited_nodes_exc_depot == 0) | (visited_nodes_exc_depot == 1)), "Nodes were visited more than once!"
+        # c3: capacity constraint
+        used_cap = torch.zeros_like(self.td_state['demands'][:, 0])
+        for ii in range(sorted_data.size(1)):
+            #reset at depot
+            used_cap = used_cap * (sorted_data[:, ii] != 0)
+            used_cap += demand[:, ii]
+
+            #Loads must no exceed capacity
+            assert torch.all(used_cap <= self.td_state['capacity']), "Agent exceeded vehicle capacity."

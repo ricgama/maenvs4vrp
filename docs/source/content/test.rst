@@ -1,16 +1,31 @@
-=======================
+=====================
 Testing Environment 
-=======================
+=====================
 
 We have some tests you can use to make sure the library is running well. We have two types of testing you should run before simulating problems. You can find them in the directory ``tests/unit/environments``
 
-Check Solution Test
+Check Multi-task Solution Test
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Script created to run tests on Multi-Tasking environments. It tests solutions validity on:
 
 * Random instances: Different variants across batches based on random attribute sampling.
 * All variants: Instances created on every variant available.
+* Different agent selectors: All agent selectors are tested: AgentSelector, RandomSelector and SmallestTimeAgentSelector.
+* Different configurations: Combinations of different numbers of agents and nodes.
+
+To run the test, you can use:
+
+.. code-block:: python
+
+    pytest check_solution_mt_test.py
+
+Check Solution Test
+^^^^^^^^^^^^^^^^^^^^^^
+
+Script created to run tests on non Multi-Tasking environments. It tests solutions validity on:
+
+* Random instances: Different variants across batches based on random attribute sampling.
 * Different agent selectors: All agent selectors are tested: AgentSelector, RandomSelector and SmallestTimeAgentSelector.
 * Different configurations: Combinations of different numbers of agents and nodes.
 

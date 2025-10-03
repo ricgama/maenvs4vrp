@@ -452,59 +452,14 @@ class Environment(AECEnv):
         return td
 
     def check_solution_validity(self):
+
         """
-        Check if solution is valid according to SDVRPTW constraints.
+        Check if solution is valid.
 
         Args:
-            N/a.
+            N7a.
 
         Returns:
-            None. Raises AssertionError if invalid.
+            None.
         """
-
-        curr_node = torch.zeros(*self.batch_size, dtype=torch.int64, device=self.device)
-        curr_time = torch.zeros(*self.batch_size, dtype=torch.float32, device=self.device)
-        curr_load = self.td_state['capacity'].clone()
-        visited_nodes = torch.zeros(*self.batch_size, self.num_nodes, dtype=torch.int64, device=self.device)
-
-        sorted_indices = torch.argsort(self.td_state['solution']['agents'], dim=-1, stable=True)
-        sorted_data = torch.gather(self.td_state['solution']['actions'], dim=-1, index=sorted_indices)
-        cur_demands = self.td_state['demands'].gather(1, sorted_data)
-
-        for ii in range(sorted_data.size(1)):
-            next_node = sorted_data[:, ii]
-
-            curr_loc = self.td_state['coords'][torch.arange(self.td_state['coords'].size(0)), curr_node]
-            next_loc = self.td_state['coords'][torch.arange(self.td_state['coords'].size(0)), next_node]
-            dist = torch.pairwise_distance(curr_loc, next_loc, eps=0, keepdim=False)
-
-            arrivej = curr_time + dist
-            tw_low = self.td_state['tw_low'].gather(1, next_node.unsqueeze(-1)).squeeze(-1)
-            tw_high = self.td_state['tw_high'].gather(1, next_node.unsqueeze(-1)).squeeze(-1)
-            service_time = self.td_state['service_time'].gather(1, next_node.unsqueeze(-1)).squeeze(-1)
-            time2depot = self.td_state['time2depot'].gather(1, next_node.unsqueeze(-1)).squeeze(-1)
-            end_time = self.td_state['end_time']
-
-            waitj = torch.clip(tw_low - arrivej, min=0)
-            service_startj = arrivej + waitj
-
-            # c1: service must start before tw_high
-            assert torch.all(service_startj <= tw_high), "Service started after allowed time window."
-            # c2: must be able to finish service and return to depot before end_time
-            assert torch.all(service_startj + service_time + time2depot <= end_time.unsqueeze(-1)), "Cannot finish service and return to depot in time."
-
-            # Capacity constraint: can split demand, but cannot exceed vehicle capacity
-            assert torch.all(cur_demands[:, ii] <= curr_load), "Agent exceeded vehicle capacity."
-
-            # Mark node as visited (can be visited multiple times for split delivery)
-            fill = visited_nodes.gather(1, next_node.unsqueeze(-1))
-            visited_nodes.scatter_(1, next_node.unsqueeze(-1), fill + 1)
-
-            # Update time and load
-            curr_time = torch.max(arrivej, tw_low) + service_time
-            curr_load = torch.where(next_node == 0, self.td_state['capacity'], curr_load - cur_demands[:, ii])
-            curr_node = next_node
-            curr_time[next_node == 0] = 0.0
-            curr_load[next_node == 0] = self.td_state['capacity'].squeeze(-1)
-
-        # For SDVRPTW, nodes can be visited multiple times, so no assertion on visited_nodes
+        raise NotImplementedError()
