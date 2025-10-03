@@ -467,7 +467,7 @@ class Environment(AECEnv):
 
         curr_node = torch.zeros(*self.batch_size, dtype=torch.int64, device=self.device)
         curr_time = torch.zeros(*self.batch_size, dtype=torch.float32, device=self.device)
-        curr_load = torch.ones(*self.batch_size, dtype=torch.float32, device=self.device) * self.td_state['capacity']
+        curr_load = self.td_state['capacity'].clone()
         visited_nodes = torch.zeros(*self.batch_size, self.num_nodes, dtype=torch.int64, device=self.device)
 
         sorted_indices = torch.argsort(self.td_state['solution']['agents'], dim=-1, stable=True)
@@ -508,7 +508,7 @@ class Environment(AECEnv):
             curr_load = torch.where(next_node == 0, self.td_state['capacity'], curr_load - demand[:, ii])
             curr_node = next_node
             curr_time[next_node == 0] = 0.0
-            curr_load[next_node == 0] = self.td_state['capacity']
+            curr_load[next_node == 0] = self.td_state['capacity'].squeeze(-1)
 
         visited_nodes_exc_depot = visited_nodes[:, 1:]
         assert torch.all((visited_nodes_exc_depot == 0) | (visited_nodes_exc_depot == 1)), "Nodes were visited more than once!"

@@ -122,7 +122,7 @@ def test_instance_env_preset_agent_iterator_gives_no_error(environment_instances
         env = environment_instances_fixture
         for nnodes in [50, 100, 500, 1000]:
             for nagents in [20, 30, 50]:
-                td = env.reset(num_agents=nagents, num_nodes=nnodes, variant_preset=variant)
+                td = env.reset(num_agents=nagents, num_nodes=nnodes, variant_preset=variant, batch_size=256)
                 while not td["done"].all():  
                     td = env.sample_action(td)
                     td = env.step(td)
@@ -134,7 +134,7 @@ def test_instance_env_preset_agent_smallesttime_iterator_gives_no_error(environm
         env = environment_instances_fixture_st
         for nnodes in [50, 100, 500, 1000]:
             for nagents in [20, 30, 50]:
-                td = env.reset(num_agents=nagents, num_nodes=nnodes, variant_preset=variant)
+                td = env.reset(num_agents=nagents, num_nodes=nnodes, variant_preset=variant, batch_size=256)
                 while not td["done"].all():  
                     td = env.sample_action(td)
                     td = env.step(td)
@@ -145,7 +145,7 @@ def test_instance_env_preset_agent_rand_iterator_gives_no_error(environment_inst
         env = environment_instances_fixture_rand
         for nnodes in [50, 100, 500, 1000]:
             for nagents in [20, 30, 50]:
-                td = env.reset(num_agents=nagents, num_nodes=nnodes, variant_preset=variant)
+                td = env.reset(num_agents=nagents, num_nodes=nnodes, variant_preset=variant, batch_size=256)
                 while not td["done"].all():  
                     td = env.sample_action(td)
                     td = env.step(td)
