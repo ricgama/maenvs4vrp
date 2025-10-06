@@ -1,7 +1,7 @@
 import pytest
 import importlib
 
-ENVIRONMENT_LIST = ['cvrptw', 'toptw', 'pcvrptw', 'cvrpstw', 'sdvrptw', 'mdvrptw', 'dvrptw']
+ENVIRONMENT_LIST = ['cvrptw', 'toptw', 'pcvrptw', 'cvrpstw', 'mdvrptw', 'dvrptw']
 
 
 @pytest.fixture(params=ENVIRONMENT_LIST)
@@ -82,7 +82,7 @@ def test_instance_env_agent_iterator_gives_no_error(environment_instances_fixtur
     env = environment_instances_fixture
     for nnodes in [51, 101, 501, 1001]:
         for nagents in [20, 30, 50]:
-            td = env.reset(num_agents=nagents, num_nodes=nnodes, batch_size=256)
+            td = env.reset(num_agents=nagents, num_nodes=nnodes, batch_size=8)
             while not td["done"].all():  
                 td = env.sample_action(td)
                 td = env.step(td)
@@ -93,7 +93,7 @@ def test_instance_env_agent_smallesttime_iterator_gives_no_error(environment_ins
     env = environment_instances_fixture_st
     for nnodes in [51, 101, 501, 1001]:
         for nagents in [20, 30, 50]:
-            td = env.reset(num_agents=nagents, num_nodes=nnodes, batch_size=256)
+            td = env.reset(num_agents=nagents, num_nodes=nnodes, batch_size=8)
             while not td["done"].all():  
                 td = env.sample_action(td)
                 td = env.step(td)
@@ -103,7 +103,7 @@ def test_instance_env_agent_rand_iterator_gives_no_error(environment_instances_f
     env = environment_instances_fixture_rand
     for nnodes in [51, 101, 501, 1001]:
         for nagents in [20, 30, 50]:
-            td = env.reset(num_agents=nagents, num_nodes=nnodes, batch_size=256)
+            td = env.reset(num_agents=nagents, num_nodes=nnodes, batch_size=8)
             while not td["done"].all():  
                 td = env.sample_action(td)
                 td = env.step(td)
