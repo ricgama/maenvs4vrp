@@ -1,7 +1,7 @@
 import pytest
 import importlib
 
-ENVIRONMENT_LIST = ['cvrptw', 'toptw', 'pcvrptw', 'cvrpstw', 'mdvrptw', 'dvrptw']
+ENVIRONMENT_LIST = ['cvrptw', 'toptw', 'pcvrptw', 'cvrpstw', 'mdvrptw', 'dvrptw', 'dsvrptw']
 
 
 @pytest.fixture(params=ENVIRONMENT_LIST)

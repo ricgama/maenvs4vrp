@@ -328,7 +328,7 @@ class Environment(AECEnv):
 
         if self.n_digits is not None:
             dist2j = torch.floor(self.n_digits * dist2j) / self.n_digits
-            
+
         time2j = dist2j / self._sample_speed()
 
         tw = self.td_state['tw_low'].gather(1, action)
@@ -442,6 +442,7 @@ class Environment(AECEnv):
         else:
             self.td_state['solution','agents'] = self.td_state['cur_agent_idx']
 
+
     def step(self, td: TensorDict) -> TensorDict:
         """
         Perform an environment step for active agent.
@@ -492,14 +493,42 @@ class Environment(AECEnv):
         return td
 
     def check_solution_validity(self):
-
         """
-        Check if solution is valid.
+        Check if solution is valid according to DSVRPTW constraints.
 
         Args:
-            N7a.
+            N/a.
 
         Returns:
-            None.
+            None. Raises AssertionError if invalid.
         """
-        raise NotImplementedError()
+
+        curr_node = torch.zeros(*self.batch_size, dtype=torch.int64, device=self.device)
+        curr_time = torch.zeros(*self.batch_size, dtype=torch.float32, device=self.device)
+        visited_nodes = torch.zeros(*self.batch_size, self.num_nodes, dtype=torch.int64, device=self.device)
+
+        sorted_indices = torch.argsort(self.td_state['solution']['agents'], dim=-1, stable=True)
+        sorted_data = torch.gather(self.td_state['solution']['actions'], dim=-1, index=sorted_indices)
+        demand = self.td_state['demands'].gather(1, sorted_data)
+
+        for ii in range(sorted_data.size(1)):
+            next_node = sorted_data[:, ii]
+
+            curr_loc = gather_by_index(self.td_state['coords'], curr_node)
+            next_loc = gather_by_index(self.td_state['coords'], next_node)
+           
+            # Mark node as visited
+            fill = visited_nodes.gather(1, next_node.unsqueeze(-1))
+            visited_nodes.scatter_(1, next_node.unsqueeze(-1), fill + 1)
+
+        visited_nodes_exc_depot = visited_nodes[:, 1:]
+        assert torch.all((visited_nodes_exc_depot == 0) | (visited_nodes_exc_depot == 1)), "Nodes were visited more than once!"
+        # c3: capacity constraint
+        used_cap = torch.zeros_like(self.td_state['demands'][:, 0])
+        for ii in range(sorted_data.size(1)):
+            #reset at depot
+            used_cap = used_cap * (sorted_data[:, ii] != 0)
+            used_cap += demand[:, ii]
+
+            #Loads must no exceed capacity
+            assert torch.all(used_cap <= self.td_state['capacity']), "Agent exceeded vehicle capacity."
