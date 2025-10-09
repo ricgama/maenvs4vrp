@@ -18,6 +18,7 @@ What's NEW!
 - Added six new environments: **DVRPTW**, **DSVRPTW**, **MTVRP**, **MTDVRP**, **GMTVRP**, and **GMTDVRP**  
 - Introduced three new hands-on Jupyter notebook tutorials  
 - Integrated plotting tools for visualization and analysis 
+- Now every environment includes a `check_solution_validity()` method.
 
 
 Environments
