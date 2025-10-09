@@ -12,7 +12,7 @@ MAEnvs4VRP is a library made up of multi-agent environments for simulating class
     :alt: Google Colab Badge
     :target: https://colab.research.google.com/github/ricgama/maenvs4vrp/blob/master/maenvs4vrp/notebooks/1.0.0_quickstart_cvrptw.ipynb
 
-What's NEW in V0.2!
+What's NEW in v0.2!
 =====================
 
 - Added six new environments: **DVRPTW**, **DSVRPTW**, **MTVRP**, **MTDVRP**, **GMTVRP**, and **GMTDVRP**  
