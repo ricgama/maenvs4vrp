@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'mdvrptw/data/generated'
 
 class InstanceGenerator(InstanceBuilder):
     """
-    MDVRPTW instances generation class.
+    MDVRPTW instance generation class.
     """
     @classmethod
     def get_list_of_benchmark_instances(cls):
@@ -45,7 +45,7 @@ class InstanceGenerator(InstanceBuilder):
                  seed:int=None) -> None:
         """    
         Constructor. Instance generator.
-
+        
         Args:       
             instance_type(str): Instance type. Can be "validation" or "test". Defaults to "validation".
             set_of_instances(set):  Set of instances file names. Defaults to None.
@@ -325,7 +325,8 @@ class InstanceGenerator(InstanceBuilder):
                 instance[key] = instance_info_s['data'][key].repeat(n_augment, 1, 1)
             elif len(instance_info_s['data'][key].shape) == 2:
                 instance[key] = instance_info_s['data'][key].repeat(n_augment, 1)
-
+            elif len(instance_info_s['data'][key].shape) == 1:
+                instance[key] = instance_info_s['data'][key].repeat(n_augment)
 
         instance_info = {'name':'random_instance',
                          'num_nodes': self.max_num_nodes,

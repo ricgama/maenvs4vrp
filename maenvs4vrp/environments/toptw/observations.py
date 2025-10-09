@@ -37,6 +37,9 @@ class Observations(ObservationBuilder):
 
         Args:
             feature_list(Dict): Dictionary containing observation features list to be available to the agent. Defaults to None.
+        
+        Returns:
+            None.
         """
 
         self.default_feature_list = {'nodes_static': {'x_coordinate': {'feat': 'x_coordinate', 'norm': None},

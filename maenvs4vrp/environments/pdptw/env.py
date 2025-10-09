@@ -10,6 +10,7 @@ from maenvs4vrp.core.env_observation_builder import ObservationBuilder
 from maenvs4vrp.core.env_agent_selector import BaseSelector
 from maenvs4vrp.core.env_agent_reward import RewardFn
 from maenvs4vrp.core.env import AECEnv
+from maenvs4vrp.utils.utils import gather_by_index
 
 
 class Environment(AECEnv):
@@ -94,10 +95,10 @@ class Environment(AECEnv):
         Compute a random action from avaliable actions to current agent.
         
         Args:
-            td(TensorDict): Tensor environment instance.
+            td(TensorDict): Environment instance tensor.
 
         Returns:
-            td(TensorDict): Tensor environment instance with updated action.
+            td(TensorDict): Environment instance tensor with updated action.
         """
         action = torch.multinomial(self.td_state['cur_agent']["action_mask"].float(), 1).to(self.device)
         td['action'] = action
@@ -115,7 +116,7 @@ class Environment(AECEnv):
               n_augment: Optional[int] = None,
               seed:int|None=None)-> TensorDict:
         """
-        Reset the environment and load agent information into dictionary.
+        Reset the environment.
 
         Args:
             num_agents(int, optional): Total number of agents. Defaults to None.
@@ -176,14 +177,14 @@ class Environment(AECEnv):
         self.td_state['time2depot'] = time2depot
 
         # only activate pickup services and depot
-        active_nodes_mask = torch.ones((*batch_size, self.num_nodes),dtype=torch.bool, device=self.device)
-        active_nodes_mask = torch.where(self.td_state['is_delivery'], False, active_nodes_mask)
+        feasible_nodes = torch.ones((*batch_size, self.num_nodes),dtype=torch.bool, device=self.device)
+        feasible_nodes = torch.where(self.td_state['is_delivery'], False, feasible_nodes)
 
         self.td_state['nodes'] = TensorDict(
                                     source={'cur_demands': self.td_state['demands'].clone(),
-                                            'active_nodes_mask': active_nodes_mask},
+                                            'active_nodes_mask': torch.ones((*batch_size, self.num_nodes),dtype=torch.bool, device=self.device)},
                                     batch_size=batch_size, device=self.device)
-        
+
         self.td_state['agents'] =  TensorDict(
                                     source={'capacity': self.td_state['capacity'],
                                             'cur_load': torch.zeros((*batch_size, self.num_agents), dtype = torch.float, device=self.device),
@@ -192,13 +193,14 @@ class Environment(AECEnv):
                                             'cur_ttime': torch.zeros((*batch_size, self.num_agents), dtype = torch.float, device=self.device),
                                             'cum_ttime': torch.zeros((*batch_size, self.num_agents), dtype = torch.float, device=self.device),
                                             'visited_nodes': torch.zeros((*batch_size, self.num_agents, self.num_nodes), dtype=torch.bool, device=self.device),
-                                            'feasible_nodes': torch.ones((*batch_size, self.num_agents, self.num_nodes), dtype=torch.bool, device=self.device),
+                                            'feasible_nodes': feasible_nodes.unsqueeze(1).repeat((1, self.num_agents, 1)),
                                             'pending_deliveries': torch.zeros((*batch_size, self.num_agents, self.num_nodes), dtype=torch.bool, device=self.device),
                                             'active_agents_mask': torch.ones((*batch_size, self.num_agents), dtype=torch.bool, device=self.device),
                                             'cur_step': torch.zeros((*batch_size, self.num_agents), dtype=torch.int32, device=self.device)},
                                     batch_size=batch_size, device=self.device)
 
         self.td_state['cur_agent_idx'] = torch.zeros((*batch_size, 1), dtype = torch.int64, device=self.device)
+        self.td_state['cur_node_idx'] = self.td_state['depot_idx'].clone()
 
         self.td_state['cur_agent'] = TensorDict({
                                 'action_mask': self.td_state['agents']['feasible_nodes'].gather(1, self.td_state['cur_agent_idx'][:,:,None].expand(-1, -1, self.num_nodes)).squeeze(1),
@@ -229,6 +231,7 @@ class Environment(AECEnv):
                 "agent_step": agent_step,
                 "observations": td_observations,
                 "cur_agent_idx":self.td_state['cur_agent_idx'].clone(),
+                "cur_node_idx": self.td_state['cur_node_idx'].clone(),
                 "reward": reward,
                 "penalty":penalty,
                 "done": done,
@@ -247,7 +250,7 @@ class Environment(AECEnv):
             None.
         """
 
-        _mask = self.td_state['nodes']['active_nodes_mask'].clone() 
+        _mask = self.td_state['nodes']['active_nodes_mask'].clone() * self.td_state['cur_agent']['action_mask'].clone()
 
         # time windows constraints
         loc = self.td_state['coords'].gather(1, self.td_state['cur_agent']['cur_node'][:,:,None].expand(-1, -1, 2))
@@ -289,21 +292,14 @@ class Environment(AECEnv):
         
         self.td_state['done'] = (~self.td_state['agents']['active_agents_mask']).all(dim=-1)
         self.td_state['done'][former_done] = True
-
-        # check if is pickup or delivery and update served nodes
-        is_pickup_bool = self.td_state['is_pickup'].gather(1, action)
-        action_delivery_idx = self.td_state['delivery_idx'].gather(1, action)
-
-        # open corresponding delivery if action is pickup
-        self.td_state['nodes', 'active_nodes_mask'].scatter_(1, action_delivery_idx, is_pickup_bool)
-        self.td_state['nodes', 'active_nodes_mask'].scatter_(1, self.td_state['depot_idx'], True)
-        self.td_state['nodes', 'active_nodes_mask'].scatter_(1, action, action.eq(self.td_state['depot_idx']))
+        # update served nodes
+        self.td_state['nodes']['active_nodes_mask'].scatter_(1, action, action.eq(self.td_state['depot_idx']))
         self.td_state['is_last_step'] = self.td_state['done'].eq(~former_done)
 
 
     def _update_state(self, action):
         """
-        Update agent state.
+        Update environment state.
 
         Args:
             action(torch.Tensor): Tensor with agent moves.
@@ -331,6 +327,12 @@ class Environment(AECEnv):
         # check if is pickup or delivery,
         is_pickup_bool = self.td_state['is_pickup'].gather(1, action)
         action_delivery_idx = self.td_state['delivery_idx'].gather(1, action)
+
+        # open corresponding delivery if action is pickup
+        self.td_state['cur_agent', 'action_mask'].scatter_(1, action_delivery_idx, is_pickup_bool)
+        self.td_state['cur_agent', 'action_mask'].scatter_(1, self.td_state['depot_idx'], True)
+        self.td_state['agents','feasible_nodes'].scatter_(1, 
+                                            self.td_state['cur_agent_idx'][:,:,None].expand(-1,-1,self.num_nodes), self.td_state['cur_agent','action_mask'].unsqueeze(1))
 
         # open corresponding delivery if action is pickup
         self.td_state['cur_agent','pending_deliveries'].scatter_(1, action_delivery_idx, is_pickup_bool)
@@ -377,10 +379,9 @@ class Environment(AECEnv):
         self.td_state['cur_agent']['cur_step'] = torch.where(~agents_done, self.td_state['cur_agent']['cur_step']+1, 
                                                              self.td_state['cur_agent']['cur_step'])
         self.td_state['agents']['cur_step'].scatter_(1, self.td_state['cur_agent_idx'], self.td_state['cur_agent']['cur_step'])
-
+        self.td_state['cur_node_idx'] = action.clone()
         # if all done activate first agent to guarantee batch consistency during agent sampling
         self.td_state['agents']['active_agents_mask'][self.td_state['agents']['active_agents_mask'].sum(1).eq(0), 0] = True
-        self._update_feasibility()
 
     def _update_cur_agent(self, cur_agent_idx):
         """
@@ -431,10 +432,10 @@ class Environment(AECEnv):
         Perform an environment step for active agent.
 
         Args:
-            td(TensorDict): Tensor environment instance.
+            td(TensorDict): Environment tensor instance.
 
         Returns:
-            td(TensorDict): Updated tensor environment instance.
+            td(TensorDict): Updated environment tensor instance.
         """
         action = td["action"]
         assert self.td_state['cur_agent']['action_mask'].gather(1, action).all(), f"not feasible action"
@@ -466,10 +467,83 @@ class Environment(AECEnv):
                 "observations": td_observations,
                 "reward": reward,
                 "penalty":penalty,  
-                "cur_agent_idx":cur_agent_idx,              
+                "cur_agent_idx":cur_agent_idx,
+                "cur_node_idx": self.td_state['cur_node_idx'].clone(),              
                 "done": done,
                 "is_last_step": is_last_step
             },
         )
         return td
 
+    def check_solution_validity(self):
+        """
+        Check if solution is valid according to PDPTW constraints.
+
+        Args:
+            N/a.
+
+        Returns:
+            None. Raises AssertionError if invalid.
+        """
+
+        curr_node = torch.zeros(*self.batch_size, dtype=torch.int64, device=self.device)
+        curr_time = torch.zeros(*self.batch_size, dtype=torch.float32, device=self.device)
+        curr_load = torch.zeros(*self.batch_size, dtype=torch.float32, device=self.device)
+        visited_nodes = torch.zeros(*self.batch_size, self.num_nodes, dtype=torch.int64, device=self.device)
+        pending_deliveries = torch.zeros(*self.batch_size, self.num_nodes, dtype=torch.bool, device=self.device)
+
+        sorted_indices = torch.argsort(self.td_state['solution']['agents'], dim=-1, stable=True)
+        sorted_data = torch.gather(self.td_state['solution']['actions'], dim=-1, index=sorted_indices)
+
+        demand = gather_by_index(self.td_state['demands'], sorted_data)
+        is_pickup = gather_by_index(self.td_state['is_pickup'], sorted_data)
+        is_delivery = gather_by_index(self.td_state['is_delivery'], sorted_data)
+        delivery_idx = gather_by_index(self.td_state['delivery_idx'], sorted_data)
+
+        for ii in range(sorted_data.size(1)):
+            next_node = sorted_data[:, ii]
+
+            curr_loc = gather_by_index(self.td_state['coords'], curr_node)
+            next_loc = gather_by_index(self.td_state['coords'], next_node)
+            dist = torch.pairwise_distance(curr_loc, next_loc, eps=0, keepdim=False)
+
+            arrivej = curr_time + dist
+            tw_low = gather_by_index(self.td_state['tw_low'], next_node)
+            tw_high = gather_by_index(self.td_state['tw_high'], next_node)
+            service_time = gather_by_index(self.td_state['service_time'], next_node)
+            time2depot = gather_by_index(self.td_state['time2depot'], next_node)
+            end_time = self.td_state['end_time']
+
+            waitj = torch.clip(tw_low - arrivej, min=0)
+            service_startj = arrivej + waitj
+
+            # Time window constraints
+            assert torch.all(service_startj <= tw_high), "Service started after allowed time window."
+            assert torch.all(service_startj + service_time + time2depot <= end_time.unsqueeze(-1)), "Cannot finish service and return to depot in time."
+
+            # Capacity constraint
+            assert torch.all(curr_load + demand[:, ii] <= self.td_state['capacity']), "Agent exceeded vehicle capacity."
+
+            # Pickup/Delivery logic
+            # If pickup, open corresponding delivery
+            pending_deliveries.scatter_(1, delivery_idx[:, ii].unsqueeze(-1), is_pickup[:, ii].unsqueeze(-1))
+            # If delivery, must have corresponding pending delivery
+            if torch.any(is_delivery[:, ii]):
+                valid_delivery = pending_deliveries.gather(1, next_node.unsqueeze(-1)).squeeze(-1)
+                assert torch.all(valid_delivery[is_delivery[:, ii]]), "Delivery attempted before pickup."
+                # Mark delivery as completed
+                pending_deliveries.scatter_(1, next_node.unsqueeze(-1), torch.zeros_like(is_delivery[:, ii].unsqueeze(-1)))
+
+            # Mark node as visited
+            fill = visited_nodes.gather(1, next_node.unsqueeze(-1))
+            visited_nodes.scatter_(1, next_node.unsqueeze(-1), fill + 1)
+
+            # Update time and load
+            curr_time = torch.max(arrivej, tw_low) + service_time
+            curr_load = curr_load + demand[:, ii]
+            curr_node = next_node
+            curr_time[next_node == 0] = 0.0
+            curr_load[next_node == 0] = 0.0
+
+        visited_nodes_exc_depot = visited_nodes[:, 1:]
+        assert torch.all((visited_nodes_exc_depot == 0) | (visited_nodes_exc_depot == 1)), "Nodes were visited more than once!"

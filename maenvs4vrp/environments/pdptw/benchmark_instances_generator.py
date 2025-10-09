@@ -12,7 +12,7 @@ BENCHMARK_INSTANCES_PATH = 'pdptw/data/benchmark'
 
 class BenchmarkInstanceGenerator(InstanceBuilder):
     """
-    PDPTW benchmark instances generation class.
+    PDPTW benchmark instance generation class.
     """
     @classmethod
     def get_list_of_benchmark_instances(cls):
@@ -36,7 +36,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
                  batch_size: Optional[torch.Size] = None,
                  seed:int=None) -> None:
         """
-        Constructor. Creates an instance space of one or several sets of data.
+        Constructor. Create an instance space of one or several sets of data.
         
         Args:       
             instance_type(str): Instance type. Can be "Solomon" or "Homberger". Defaults to "Solomon".

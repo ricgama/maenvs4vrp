@@ -6,7 +6,7 @@ Benchmark Instance Generation
 
 `Li&Lim <https://www.sintef.no/projectweb/top/pdptw/li-lim-benchmark/>`_ instances are included to be used with PDPTW environment.
 
-Benchmark instances generation settings are defined in file ``benchmark_instances_generator.py``.
+Benchmark instance generation settings are defined in file ``benchmark_instances_generator.py``.
 
 Data files format
 --------------------
@@ -34,27 +34,11 @@ Data files format
 
     Task 0 specifies the coordinates of the depot.  For pickup tasks, the PICKUP index is 0, whereas the DELIVERY sibling gives the index of the corresponding delivery task. For delivery tasks, the PICKUP index gives the index of the corresponding pickup task. The value of travel time is equal to the value of distance.
 
+Taken from: `<https://www.sintef.no/projectweb/top/pdptw/>`_
+
 BenchmarkInstanceGenerator
 ---------------------------------
 
 .. autoclass:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.__init__
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.get_list_of_benchmark_instances
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.read_instance_data
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.parse_instance_data
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.get_instance 
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.load_set_of_instances
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_first_n_services
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.random_sample_instance
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_name_from_set
-
-.. autofunction:: maenvs4vrp.environments.pdptw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_instance
+    :members:
+    :special-members: __init__

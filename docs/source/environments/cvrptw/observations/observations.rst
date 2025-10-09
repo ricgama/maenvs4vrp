@@ -12,142 +12,127 @@ Observations
 ------------------
 
 .. autoclass:: maenvs4vrp.environments.cvrptw.observations.Observations
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.__init__
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.set_env
+    :members: __init__, set_env
 
 Nodes static features
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_nodes_static_feat_dim
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_x_coordinate
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_nodes_dynamic_feat_dim
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_y_coordinate
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_nodes_feat_dim
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_x_coordinate_min_max
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_agent_feat_dim
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_y_coordinate_min_max
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_other_agents_feat_dim
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_tw_low
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_global_feat_dim
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_tw_high
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_x_coordinate
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_demand
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_y_coordinate
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_service_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_x_coordinate_min_max
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_tw_high_minus_tw_low_div_max_dur
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_y_coordinate_min_max
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_tw_low
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_tw_high
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_demand
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_service_time
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_tw_high_minus_tw_low_div_max_dur
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_is_depot
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_is_depot
 
 Nodes dynamic features
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2open_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2open_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2close_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2close_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_arrive2node_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_arrive2node_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2open_after_step_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2open_after_step_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2close_after_step_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2close_after_step_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2end_after_step_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_time2end_after_step_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_fract_time_after_step_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_fract_time_after_step_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_reachable_frac_agents
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_reachable_frac_agents
 
 Current agent features
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_x_coordinate
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_x_coordinate
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_y_coordinate
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_y_coordinate
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_x_coordinate_min_max
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_x_coordinate_min_max
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_y_coordinate_min_max
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_y_coordinate_min_max
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_frac_current_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_frac_current_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_frac_current_load
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_frac_current_load
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_arrivedepot_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_arrivedepot_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_frac_feasible_nodes
-
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_dist2depot_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agent_frac_feasible_nodes
 
 Other agents features
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_x_coordinate
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_x_coordinate
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_y_coordinate
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_y_coordinate
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_x_coordinate_min_max
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_x_coordinate_min_max
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_y_coordinate_min_max
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_y_coordinate_min_max
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_frac_current_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_frac_current_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_frac_current_load
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_frac_current_load
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_frac_feasible_nodes
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_frac_feasible_nodes
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_dist2agent_div_end_time
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_dist2agent_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_time_delta2agent_div_max_dur
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_dist2depot_div_end_time
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_was_last
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_time_delta2agent_div_max_dur
+
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_agents_was_last
 
 Global features
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_global_frac_done_agents
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_global_frac_done_agents
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_global_frac_demands
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_global_frac_demands
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_global_frac_fleet_load_capacity
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_feat_global_frac_fleet_load_capacity
 
 Computing features
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_static_features
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_static_features
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_dynamic_features
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_dynamic_features
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_agent_features
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_agent_features
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_agents_features
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_agents_features
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_global_features
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.compute_global_features
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations.get_observations
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations.get_observations
 
 Internal methods
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations._concat_features
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations._concat_features
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations._normalize_feature
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations._normalize_feature
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations._min_max_normalization
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations._min_max_normalization
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations._min_max_normalization2d
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations._min_max_normalization2d
 
-.. autofunction:: maenvs4vrp.environments.cvrptw.observations.Observations._standardize
+.. automethod:: maenvs4vrp.environments.cvrptw.observations.Observations._standardize

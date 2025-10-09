@@ -1,5 +1,6 @@
 import os
 import sys
+import subprocess
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(os.path.abspath(__file__)))))
 
@@ -12,9 +13,9 @@ sys.path.append(BASE_DIR)  # append the path to system
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'maenvs4vrp'
-copyright = '2024, maenvs4vrp'
+copyright = '2025, maenvs4vrp'
 author = 'marlvrp'
-release = '0.1.0'
+release = '0.2.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

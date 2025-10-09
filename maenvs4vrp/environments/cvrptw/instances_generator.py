@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'cvrptw/data/generated'
 
 class InstanceGenerator(InstanceBuilder):
     """
-    CVRPSTW instances generation class.
+    CVRPTW instance generation class.
     """
     @classmethod
     def get_list_of_benchmark_instances(cls):
@@ -103,6 +103,7 @@ class InstanceGenerator(InstanceBuilder):
 
 
     def get_instance(self, instance_name:str, num_agents:int=None) -> Dict:
+        
         """
         Get an instance with custom number of agents.
 
@@ -114,6 +115,7 @@ class InstanceGenerator(InstanceBuilder):
             Dict: Instance data.
 
         """
+        
         instance = self.instances_data.get(instance_name)
 
         if num_agents is not None:
@@ -314,7 +316,8 @@ class InstanceGenerator(InstanceBuilder):
                 instance[key] = instance_info_s['data'][key].repeat(n_augment, 1, 1)
             elif len(instance_info_s['data'][key].shape) == 2:
                 instance[key] = instance_info_s['data'][key].repeat(n_augment, 1)
-
+            elif len(instance_info_s['data'][key].shape) == 1:
+                instance[key] = instance_info_s['data'][key].repeat(n_augment)
 
         instance_info = {'name':'random_instance',
                          'num_nodes': self.max_num_nodes,

@@ -1,5 +1,5 @@
 =================================
-MAENVS4VRP Quickstart Notebook
+MAEnvs4VRP Quickstart Notebook
 =================================
 
 Basic Usage

@@ -12,7 +12,7 @@ GENERATED_INSTANCES_PATH = 'toptw/data/generated'
 
 class InstanceGenerator(InstanceBuilder):
     """
-    TOPTW instances generation class.
+    TOPTW instance generation class.
     """
     @classmethod
     def get_list_of_benchmark_instances(cls):
@@ -243,7 +243,7 @@ class InstanceGenerator(InstanceBuilder):
         if profits == 'constant':
             profits = torch.ones((*self.batch_size, num_nodes), dtype = torch.float, device=self.device) # constant 
         elif profits == 'uniform':
-            profits = torch.randint(low = 1, high=100, size = (*self.batch_size, num_nodes), dtype = torch.float, device=self.device) / 100 # uniform 
+            profits = torch.randint(low = 1, high=100, size = (*self.batch_size, num_nodes), dtype = torch.float, device=self.device) // 10 # uniform 
         elif profits == 'distance':
             depot_loc = coords.gather(1, instance['depot_idx'][:,:,None].expand(-1, -1, 2))
             depot2nodes = torch.pairwise_distance(depot_loc, coords, eps=0, keepdim = False)
@@ -315,7 +315,8 @@ class InstanceGenerator(InstanceBuilder):
                 instance[key] = instance_info_s['data'][key].repeat(n_augment, 1, 1)
             elif len(instance_info_s['data'][key].shape) == 2:
                 instance[key] = instance_info_s['data'][key].repeat(n_augment, 1)
-
+            elif len(instance_info_s['data'][key].shape) == 1:
+                instance[key] = instance_info_s['data'][key].repeat(n_augment)
 
         instance_info = {'name':'random_instance',
                          'num_nodes': self.max_num_nodes,

@@ -1,19 +1,16 @@
-.. _CVRPSTW-generation-toy-generation:
+.. _TOPTW-generation-toy-generation:
 
 =========================
 Toy Instance Generation 
 =========================
 
-Toy instances generation settings are defined in file ``toy_instance_generator.py``.
+Minimalist instance, for easy quick testing and debug.
+
+Toy instance generation settings are defined in file ``toy_instance_generator.py``.
 
 ToyInstanceGenerator 
 --------------------
 
-.. autoclass:: maenvs4vrp.environments.cvrpstw.toy_instance_generator.ToyInstanceGenerator
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.toy_instance_generator.ToyInstanceGenerator.__init__
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.toy_instance_generator.ToyInstanceGenerator.random_generate_instance
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.toy_instance_generator.ToyInstanceGenerator.sample_instance
-
+.. autoclass:: maenvs4vrp.environments.toptw.toy_instance_generator.ToyInstanceGenerator
+    :members:
+    :special-members: __init__

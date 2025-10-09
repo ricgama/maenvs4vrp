@@ -1,8 +1,8 @@
-=====================
+============
 Installation
-=====================
+============
 
-You can use any software you like to create an isolated python environment, so that all dependencies are consistent with the project. Make sure you `clone the repository <https://github.com/ricgama/maenvs4vrp_dev>`_ first and enter its directory in your command line.
+Set up a Python virtual environment with your preferred tools to keep dependencies consistent. Make sure you `clone the repository <https://github.com/ricgama/maenvs4vrp_dev>`_ first and enter its directory in your command line.
 
 Virtualenv
 -----------

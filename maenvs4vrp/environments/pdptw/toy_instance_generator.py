@@ -11,7 +11,7 @@ from maenvs4vrp.core.env_generator_builder import InstanceBuilder
 
 class ToyInstanceGenerator(InstanceBuilder):
     """
-    PDPTW toys instance generation class.
+    PDPTW toy instance generation class.
     """
         
     def __init__(self, 

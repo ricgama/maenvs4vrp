@@ -1,34 +1,69 @@
-.. _CVRPSTW-generation-benchmark-generation:
+.. _TOPTW-generation-benchmark-generation:
 
 ===============================
 Benchmark Instance Generation 
 ===============================
 
-Benchmark instances generation settings are defined in file ``benchmark_instances_generator.py``.
+Benchmark instance generation settings are defined in file ``benchmark_instances_generator.py``.
+
+Data files format
+----------------------
+
+.. code-block:: text
+
+    ************************
+    * TOPTW instances      *
+    ************************
+
+    The first line contains the following data:
+
+        k v N t
+
+    Where
+        k = not relevant
+        v = with this number of paths, all vertices can be visited
+        N = number of vertices
+        t = not relevant
+
+
+    The next line contains the following data:
+
+            D Q
+
+    Where
+        D = not relevant (in many files this number is missing)
+        Q = not relevant
+
+
+    The remaining lines contain the data of each point. 
+    For each point, the line contains the following data:
+
+        i x y d S f a list O C
+
+    Where
+        i = vertex number
+        x = x coordinate
+        y = y coordinate
+        d = service duration or visiting time	
+        S = profit of the location
+        f = not relevant
+        a = not relevant
+        list = not relevant (length of the list depends on a)
+            O = opening of time window (earliest time for start of service)
+        C = closing of time window (latest time for start of service)
+
+    * REMARKS *
+        - The first point (index 0) is the starting AND ending point.
+        - The number of paths (P) is not included in the data file. This value can vary (1,2,3, etc.).
+        - The time budget per path (Tmax) equals the closing time of the starting point.
+        - The Euclidean distance is used and rounded down to the first decimal for the Solomon instances 
+            and to the second decimal for the instances of Cordeau et al.
+
+Taken from: `<https://www.mech.kuleuven.be/en/cib/op#autotoc-item-autotoc-6>`_
 
 BenchmarkInstanceGenerator
 ---------------------------------
 
-.. autoclass:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.__init__
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.get_list_of_benchmark_instances
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.read_instance_data
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.parse_instance_data
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.eliminate_extra_columns
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.get_instance 
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.load_set_of_instances
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_first_n_services
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.random_sample_instance
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_name_from_set
-
-.. autofunction:: maenvs4vrp.environments.cvrpstw.benchmark_instances_generator.BenchmarkInstanceGenerator.sample_instance
+.. autoclass:: maenvs4vrp.environments.toptw.benchmark_instances_generator.BenchmarkInstanceGenerator
+    :members:
+    :special-members: __init__
