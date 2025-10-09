@@ -10,7 +10,7 @@ To create an isolated environment with conda:
     conda create --name maenvs4vrp python=3.13.5
     conda activate maenvs4vrp
 
-To install MAENVS4VRP locally on your machine:
+To install MAEnvs4VRP locally on your machine:
 
 .. code:: shell
 
