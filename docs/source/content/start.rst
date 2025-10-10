@@ -78,7 +78,7 @@ Continue Learning
 ------------------
 
 This Quickstart provides a foundation for understanding how MAEnvs4VRP operates.  
-You can find more hands-on examples and advanced topics in the :ref:`Getting Started <getting-started>` section or explore the following notebooks directly:
+You can find more hands-on examples and advanced topics in the following notebooks:
 
 .. list-table::
    :widths: 20 30 50
