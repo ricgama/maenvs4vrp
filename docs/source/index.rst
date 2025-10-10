@@ -12,7 +12,7 @@ The library provides:
 In order to narrow the current gap between the test beds for algorithm benchmarking used in Reinforcement Learning and Operations Research (OR) communities, the library allows a straightforward integration of classical OR benchmark
 instances.
 
-If you want to have a grasp of the basics about the library, you can check our `quickstart notebook <content/start.html>`_.
+If you want to have a grasp of the basics about the library, you can check our `quickstart <content/start.html>`_.
 
 
 .. toctree::
