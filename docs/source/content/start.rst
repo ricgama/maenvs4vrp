@@ -5,7 +5,7 @@ MAEnvs4VRP Quickstart
 Welcome to the MAEnvs4VRP Quickstart guide!  
 This tutorial demonstrates the **basic usage** of the library through the ``CVRPTW`` environment example.
 
-If you prefer interactive examples, you can also explore the corresponding Jupyter notebooks in the :ref:`Getting Started <getting-started>` section, or launch them directly on **Google Colab**.
+If you prefer interactive examples, you can also explore the corresponding Jupyter notebooks in <https://maenvs4vrp.readthedocs.io/en/latest/notebooks/1.0.0_quickstart_cvrptw.html>`_.
 
 ------------------
 Basic Usage
