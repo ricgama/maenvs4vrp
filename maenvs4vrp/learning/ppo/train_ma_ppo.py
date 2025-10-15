@@ -32,7 +32,7 @@ import importlib
 
 
 
-from maenvs4vrp.learning.policy_net_ma_ac import PolicyNet
+from maenvs4vrp.learning.ppo.policy_net_ma_ac import PolicyNet
 
 def save_model_state_dict(save_path, model_policy):
     # save the policy state dict 
