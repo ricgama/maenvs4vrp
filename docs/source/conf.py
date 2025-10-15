@@ -33,6 +33,8 @@ extensions = [
     'nbsphinx',
     'sphinx_copybutton']
 
+nbsphinx_allow_errors = True
+nbsphinx_execute = 'never'
 
 mathjax_config = {
     'tex2jax': {
