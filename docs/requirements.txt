@@ -1,0 +1,3 @@
+nbsphinx
+sphinx-math-dollar
+sphinx-copybutton
