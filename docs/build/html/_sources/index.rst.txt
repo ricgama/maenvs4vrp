@@ -59,14 +59,19 @@ If you want to have a grasp of the basics about the library, you can check our `
     :hidden:
     :caption: Parallel Environments
 
-    parallel_environments/parallel_environments
+    parallel_environments/cvrp/cvrp
+    parallel_environments/pcvrp/pcvrp
+    parallel_environments/pcvrptw/pcvrptw
+    parallel_environments/top/top
+    parallel_environments/toptw/toptw
 
 .. toctree::
     :maxdepth: 2
     :hidden:
     :caption: Neuro Solvers
 
-    neuro_solvers/neuro_solvers
+    neuro_solvers/attention_model/attention_model
+    neuro_solvers/two_d_ptr/two_d_ptr
 
 .. toctree::
     :maxdepth: 2

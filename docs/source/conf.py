@@ -13,9 +13,9 @@ sys.path.append(BASE_DIR)  # append the path to system
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'maenvs4vrp'
-copyright = '2025, maenvs4vrp'
-author = 'marlvrp'
-release = '0.2.0'
+copyright = '2026, maenvs4vrp'
+author = 'maenvs4vrp'
+release = '0.3.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
