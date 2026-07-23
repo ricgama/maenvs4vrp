@@ -45,7 +45,7 @@ class ToyInstanceGenerator(InstanceBuilder):
         """
         Constructor. Toy instance generator for testing.
 
-        Args:       
+        Args:
             instance_type(str):  instance type. Can be "validation" or "test". Defaults to "validation".
             set_of_instances(set): Set of instances file names. Defaults to None.
             device(str, optional): Type of processing. It can be "cpu" or "gpu". Defaults to "cpu".
@@ -57,7 +57,7 @@ class ToyInstanceGenerator(InstanceBuilder):
             self._set_seed(self.DEFAULT_SEED)
         else:
             self._set_seed(seed)
-        
+
         self.device = device
 
         if batch_size is None:
@@ -65,7 +65,7 @@ class ToyInstanceGenerator(InstanceBuilder):
         else:
             batch_size = [batch_size] if isinstance(batch_size, int) else batch_size
         self.batch_size = torch.Size(batch_size)
-    
+
     def subsample_variant(
         self,
         prob_open_routes: float = 0.5,
@@ -75,7 +75,7 @@ class ToyInstanceGenerator(InstanceBuilder):
         td: TensorDict = None,
         variant_preset = None,
     ) -> torch.Tensor:
-        
+
         """
         Subsample variant. If variant_preset is specified, it loads that variant. Otherwise it samples variant's parameters across batches based on probabilities.
 
@@ -90,7 +90,7 @@ class ToyInstanceGenerator(InstanceBuilder):
         Returns:
             td(TensorDict): Environment instance tensor.
         """
-        
+
         if variant_preset is not None:
             variant_probs = VARIANT_PROBS_PRESETS.get(variant_preset)
             assert variant_probs is not None, f"Variant preset {variant_preset} not found! \
@@ -141,7 +141,7 @@ class ToyInstanceGenerator(InstanceBuilder):
                 keep_mask = torch.zeros((*self.batch_size, 4), dtype=torch.bool)
                 indexes = torch.nonzero(variant_probs).squeeze()
                 keep_mask[:, indexes] = True
-        
+
         td = self._default_open(td, ~keep_mask[:, 0])
         td = self._default_time_windows(td, ~keep_mask[:, 1])
         td = self._default_distance_limit(td, ~keep_mask[:, 2])
@@ -150,7 +150,7 @@ class ToyInstanceGenerator(InstanceBuilder):
         self.keep_mask = keep_mask
 
         return td
-    
+
     def sample_instance(
         self,
         num_agents: int = 2,
@@ -249,7 +249,7 @@ class ToyInstanceGenerator(InstanceBuilder):
                           [-3, -2],
                           [1, -2],
                           [2, -3],
-                          [3, -2]]], device=self.device) 
+                          [3, -2]]], device=self.device)
 
         instance['coords'] = coords
         self.coords = coords
@@ -295,7 +295,7 @@ class ToyInstanceGenerator(InstanceBuilder):
                                 [3., 12.],
                                 [4., 8.],
                                 [5., 9.]]], device=self.device)
-        
+
         service_time = torch.tensor([[0.,
                                 3.,
                                 3.,
@@ -322,29 +322,29 @@ class ToyInstanceGenerator(InstanceBuilder):
         instance['is_depot'][:, self.depot_idx] = True
 
         #Start time and end time
-    
-        instance['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1), 
+
+        instance['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1),
                                                                           dtype=torch.int64, device=self.device)).squeeze(-1)
-        instance['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1), 
+        instance['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
 
         #Distance limits
 
         distance_limits = torch.tensor([20.], device=self.device)
-        
+
         instance['distance_limits'] = distance_limits
-        
+
         instance_info = {'name': 'random_instance',
                          'num_nodes': num_nodes,
                          'num_agents': num_agents,
                          'data': instance}
-        
+
         if self.subsample:
             instance_info = self.subsample_variant(td=instance_info, variant_preset=self.variant_preset)
             return instance_info
         else:
             return instance_info
-    
+
     @staticmethod
     def _default_open(td, remove):
         td['data']['open_routes'][remove] = False
@@ -357,12 +357,12 @@ class ToyInstanceGenerator(InstanceBuilder):
         td['data']['time_windows'][remove] = default_tw[remove]
         td['data']['service_time'][remove] = torch.zeros_like(td['data']['service_time'][remove])
         return td
-    
+
     @staticmethod
     def _default_distance_limit(td, remove):
         td['data']['distance_limits'][remove] = float('inf')
         return td
-    
+
     @staticmethod
     def _default_backhaul(td, remove):
         td['data']['linehaul_demands'][remove] = (

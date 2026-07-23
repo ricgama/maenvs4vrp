@@ -14,17 +14,17 @@ class ToyInstanceGenerator(InstanceBuilder):
     """
     CVRPTW toy instance generation class.
     """
-        
-    def __init__(self, 
-                 instance_type:str='validation', 
-                 set_of_instances:set=None, 
+
+    def __init__(self,
+                 instance_type:str='validation',
+                 set_of_instances:set=None,
                  device: Optional[str] = "cpu",
                  batch_size: Optional[torch.Size] = None,
                  seed:int=None) -> None:
-        """    
+        """
         Constructor. Toy instance generator for testing.
 
-        Args:       
+        Args:
             instance_type(str):  instance type. Can be "validation" or "test". Defaults to "validation".
             set_of_instances(set): Set of instances file names. Defaults to None.
             device(str, optional): Type of processing. It can be "cpu" or "gpu". Defaults to "cpu".
@@ -53,15 +53,17 @@ class ToyInstanceGenerator(InstanceBuilder):
         if set_of_instances:
             self.instance_type = instance_type
             self.load_set_of_instances()
-            
 
 
-    def random_generate_instance(self, num_agents:int=4, 
-                                 num_nodes:int=13, 
-                                 capacity:int=10, 
-                                 service_times:int=0.2, 
+
+    def random_generate_instance(self, num_agents:int=4,
+                                 num_nodes:int=13,
+                                 capacity:int=10,
+                                 service_times:int=0.2,
+                                 speed:float=1.0,
                                  batch_size:int = 1,
-                                 seed:int=None)-> TensorDict:
+                                 seed:int=None,
+                                 device:str=None)-> TensorDict:
         """
         Generate random toy instance.
 
@@ -96,54 +98,55 @@ class ToyInstanceGenerator(InstanceBuilder):
             self.batch_size = torch.Size(batch_size)
 
         instance = TensorDict({}, batch_size=self.batch_size, device=self.device)
-        
+
         self.depot_idx = 0
         instance['depot_idx'] = self.depot_idx * torch.ones((*self.batch_size, 1), dtype = torch.int64, device=self.device)
 
-        coords = torch.tensor([[[0, 0],
-                          [1, 2],
-                          [2, 3],
-                          [3, 2],
-                          [-1, 2],
-                          [-2, 3],
-                          [-3, 2],
-                          [-1, -2],
-                          [-2, -3],
-                          [-3, -2],
-                          [1, -2],
-                          [2, -3],
-                          [3, -2]]], device=self.device) 
+        coords = torch.tensor([[[0., 0.],
+                          [1., 2.],
+                          [2., 3.],
+                          [3., 2.],
+                          [-1., 2.],
+                          [-2., 3.],
+                          [-3., 2.],
+                          [-1., -2.],
+                          [-2., -3.],
+                          [-3., -2.],
+                          [1., -2.],
+                          [2., -3.],
+                          [3., -2.]]], device=self.device)
         instance['coords'] = coords
 
         service_times = self.service_times * torch.ones((*self.batch_size, num_nodes), dtype = torch.float, device=self.device)
         service_times[:, self.depot_idx] = 0
         instance['service_time'] = service_times
 
-        time_windows = torch.tensor([[[0, 12],
-                                [3, 6],
-                                [4, 8],
-                                [5, 9],
-                                [3, 6],
-                                [4, 8],
-                                [5, 9],
-                                [3, 6],
-                                [4, 8],
-                                [5, 9],
-                                [3, 6],
-                                [4, 8],
-                                [5, 9]]], device=self.device)
-        
+        time_windows = torch.tensor([[[0., 12.],
+                                [3., 6.],
+                                [4., 8.],
+                                [5., 9.],
+                                [3., 6.],
+                                [4., 8.],
+                                [5., 9],
+                                [3., 6],
+                                [4., 8.],
+                                [5., 9.],
+                                [3., 6.],
+                                [4., 8.],
+                                [5., 9.]]], device=self.device)
+
         instance['tw_low'] =  time_windows[:, :, 0].clone()
         instance['tw_high'] = time_windows[:, :, 1].clone()
 
+        instance['speed'] = speed * torch.ones((*self.batch_size, 1), dtype = torch.float, device=self.device)
         instance['is_depot'] = torch.zeros((*self.batch_size, num_nodes), dtype=torch.bool, device=self.device)
         instance['is_depot'][:, self.depot_idx] = True
 
-        instance['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1), 
+        instance['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1),
                                                                           dtype=torch.int64, device=self.device)).squeeze(-1)
-        instance['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1), 
+        instance['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
- 
+
         demands = torch.tensor([[0., 5., 6., 4., 7., 3., 4., 6., 5., 3., 6., 5., 4.]], device=self.device)
 
         instance['demands'] = demands
@@ -156,16 +159,18 @@ class ToyInstanceGenerator(InstanceBuilder):
         return instance_info
 
 
-    def sample_instance(self, 
-                        num_agents=None, 
-                        num_nodes=None, 
+    def sample_instance(self,
+                        num_agents=None,
+                        num_nodes=None,
                         service_times=0.2,
-                        capacity=10, 
-                        instance_name:str=None, 
+                        capacity=10,
+                        speed=1.0,
+                        instance_name:str=None,
                         sample_type:str='random',
                         batch_size: Optional[torch.Size] = None,
                         n_augment: Optional[int] = None,
-                        seed:int=None)-> Dict:
+                        seed:int=None,
+                        device:str="cpu")-> Dict:
         """
         Sample one instance from instance space.
 
@@ -207,18 +212,21 @@ class ToyInstanceGenerator(InstanceBuilder):
             service_times = 0.2
         if capacity is None:
             capacity = 10
-
+        if speed is None:
+            speed = 1.0
         if batch_size is not None:
             batch_size = [batch_size] if isinstance(batch_size, int) else batch_size
             self.batch_size = torch.Size(batch_size)
-           
+
         if sample_type=='random':
-            instance_info = self.random_generate_instance(num_agents=num_agents, 
-                                                     num_nodes=num_nodes, 
-                                                     capacity=capacity, 
+            instance_info = self.random_generate_instance(num_agents=num_agents,
+                                                     num_nodes=num_nodes,
+                                                     capacity=capacity,
                                                      service_times=service_times,
+                                                     speed=speed,
                                                      batch_size = batch_size,
-                                                     seed=seed)
+                                                     seed=seed,
+                                                     device=self.device)
 
         return instance_info
 
@@ -232,5 +240,5 @@ if __name__ == '__main__':
     if not os.path.exists('data/generated/validation'):
         os.makedirs('data/generated/validation')
 
-    
+
     print('done')

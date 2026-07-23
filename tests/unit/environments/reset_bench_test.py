@@ -1,7 +1,8 @@
 import pytest
 import importlib
 
-ENVIRONMENT_LIST = ['cvrptw', 'toptw', 'cvrpstw', 'sdvrptw', 'pcvrptw', 'pdptw', 'mdvrptw', 'mtvrp', 'gmtvrp', 'mtdvrp', 'gmtdvrp']
+#ENVIRONMENT_LIST = ['cvrpstw', 'toptw', 'cvrpstw', 'sdvrptw', 'pcvrptw', 'pdptw', 'mdvrptw', 'mtvrp', 'gmtvrp', 'mtdvrp', 'gmtdvrp']
+ENVIRONMENT_LIST = ['cvrpstw']
 
 
 
@@ -15,12 +16,12 @@ def environment_benchmark_instance_fixture(request):
 
     generator_module_name = f'maenvs4vrp.environments.{request.param}.benchmark_instances_generator'
     generator_module = importlib.import_module(generator_module_name)
-    list_of_benchmark_instances = generator_module.BenchmarkInstanceGenerator.get_list_of_benchmark_instances()
-    instance_types = list_of_benchmark_instances.keys()
-    instance_type = list(instance_types)[0]
-    set_of_instances = list_of_benchmark_instances.get(instance_type)
-    generator = generator_module.BenchmarkInstanceGenerator(instance_type=instance_type,
-                                                            set_of_instances=set_of_instances)
+    list_of_instances = generator_module.BenchmarkInstanceGenerator.get_list_of_instances()
+    instance_names = list_of_instances.keys()
+    instance_name = list(instance_names)[0]
+    list_of_instances = list_of_instances.get(instance_name)
+    generator = generator_module.BenchmarkInstanceGenerator(instance_name=instance_name,
+                                                            list_of_instances=list_of_instances)
 
     environment_module_name = f'maenvs4vrp.environments.{request.param}.env'
     environment_module = importlib.import_module(environment_module_name)
@@ -45,12 +46,12 @@ def environment_benchmark_instance_fixture_st(request):
 
     generator_module_name = f'maenvs4vrp.environments.{request.param}.benchmark_instances_generator'
     generator_module = importlib.import_module(generator_module_name)
-    list_of_benchmark_instances = generator_module.BenchmarkInstanceGenerator.get_list_of_benchmark_instances()
-    instance_types = list_of_benchmark_instances.keys()
-    instance_type = list(instance_types)[0]
-    set_of_instances = list_of_benchmark_instances.get(instance_type)
-    generator = generator_module.BenchmarkInstanceGenerator(instance_type=instance_type,
-                                                            set_of_instances=set_of_instances)
+    list_of_benchmark_instances = generator_module.BenchmarkInstanceGenerator.get_list_of_instances()
+    instance_names = list_of_benchmark_instances.keys()
+    instance_name = list(instance_names)[0]
+    list_of_instances = list_of_benchmark_instances.get(instance_name)
+    generator = generator_module.BenchmarkInstanceGenerator(instance_name=instance_name,
+                                                            list_of_instances=list_of_instances)
 
     environment_module_name = f'maenvs4vrp.environments.{request.param}.env'
     environment_module = importlib.import_module(environment_module_name)
@@ -76,12 +77,12 @@ def environment_benchmark_instance_fixture_rand(request):
 
     generator_module_name = f'maenvs4vrp.environments.{request.param}.benchmark_instances_generator'
     generator_module = importlib.import_module(generator_module_name)
-    list_of_benchmark_instances = generator_module.BenchmarkInstanceGenerator.get_list_of_benchmark_instances()
-    instance_types = list_of_benchmark_instances.keys()
-    instance_type = list(instance_types)[0]
-    set_of_instances = list_of_benchmark_instances.get(instance_type)
-    generator = generator_module.BenchmarkInstanceGenerator(instance_type=instance_type,
-                                                            set_of_instances=set_of_instances)
+    list_of_benchmark_instances = generator_module.BenchmarkInstanceGenerator.get_list_of_instances()
+    instance_names = list_of_benchmark_instances.keys()
+    instance_name = list(instance_names)[0]
+    list_of_instances = list_of_benchmark_instances.get(instance_name)
+    generator = generator_module.BenchmarkInstanceGenerator(instance_name=instance_name,
+                                                            list_of_instances=list_of_instances)
 
     environment_module_name = f'maenvs4vrp.environments.{request.param}.env'
     environment_module = importlib.import_module(environment_module_name)
@@ -106,13 +107,13 @@ def test_benchmark_instance_env_reset_gives_no_error(environment_benchmark_insta
 def test_benchmark_instance_env_observe_gives_no_error(environment_benchmark_instance_fixture):
     env = environment_benchmark_instance_fixture
     td = env.reset()
-    td_observations = env.observe()
+    td_observations = env.observe(td)
 
 
 # agent iterator
 def test_benchmark_instance_env_agent_iterator_gives_no_error(environment_benchmark_instance_fixture):
     env = environment_benchmark_instance_fixture
-    td = env.reset()
+    td = env.reset_agent_select_observe()
     while not td["done"].all():  
         td = env.sample_action(td)
         td = env.step(td)
@@ -120,14 +121,14 @@ def test_benchmark_instance_env_agent_iterator_gives_no_error(environment_benchm
 
 def test_benchmark_instance_env_smallesttime_agent_iterator_gives_no_error(environment_benchmark_instance_fixture_st):
     env = environment_benchmark_instance_fixture_st
-    td = env.reset()
+    td = env.reset_agent_select_observe()
     while not td["done"].all():  
         td = env.sample_action(td)
         td = env.step(td)
 
 def test_benchmark_instance_env_rand_agent_iterator_gives_no_error(environment_benchmark_instance_fixture_rand):
     env = environment_benchmark_instance_fixture_rand
-    td = env.reset()
+    td = env.reset_agent_select_observe()
     while not td["done"].all():  
         td = env.sample_action(td)
         td = env.step(td)

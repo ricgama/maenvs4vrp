@@ -14,11 +14,13 @@ def benchmark_instances_generator_module(request):
 
 @pytest.fixture
 def benchmark_instance_generator_fixture(benchmark_instances_generator_module):
-    list_of_benchmark_instances = benchmark_instances_generator_module.BenchmarkInstanceGenerator.get_list_of_benchmark_instances()
-    instance_types = list_of_benchmark_instances.keys()
-    instance_type = list(instance_types)[0]
-    set_of_instances = list_of_benchmark_instances.get(instance_type)
-    generator = benchmark_instances_generator_module.BenchmarkInstanceGenerator(instance_type=instance_type, set_of_instances=set_of_instances)
+    list_of_benchmark_instances = benchmark_instances_generator_module.BenchmarkInstanceGenerator.get_list_of_instances()
+    instance_names = list_of_benchmark_instances.keys()
+    instance_name = list(instance_names)[0]
+    list_of_instances = list_of_benchmark_instances.get(instance_name)
+    if not list_of_instances:
+        pytest.skip(f"No benchmark instances available for '{instance_name}'")
+    generator = benchmark_instances_generator_module.BenchmarkInstanceGenerator(instance_name=instance_name, list_of_instances=list_of_instances)
     return generator
 
 

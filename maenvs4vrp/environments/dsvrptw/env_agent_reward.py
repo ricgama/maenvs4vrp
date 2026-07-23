@@ -14,7 +14,7 @@ class DenseReward(RewardFn):
         """
         Constructor.
 
-        Args: 
+        Args:
             n/a.
 
         Returns:
@@ -50,9 +50,9 @@ class DenseReward(RewardFn):
         reward = -self.env.td_state['cur_agent']['cur_tdist'].clone()
         penalty = self.env.td_state['cur_agent']['cur_penalty'].clone()
 
-        # compute penalty if env has unvisited nodes 
+        # compute penalty if env has unvisited nodes
         is_last_step = self.env.td_state['is_last_step']
-        
+
         depot2nodes = torch.pairwise_distance(self.env.td_state['depot_loc'], self.env.td_state['coords'], eps=0, keepdim = False)
         if self.env.n_digits is not None:
             depot2nodes = torch.floor(self.env.n_digits * depot2nodes) / self.env.n_digits
@@ -69,7 +69,7 @@ class SparseReward(RewardFn):
         """
         Constructor.
 
-        Args: 
+        Args:
             n/a.
 
         Returns:
@@ -105,9 +105,9 @@ class SparseReward(RewardFn):
         reward = torch.zeros_like(action, dtype = torch.float, device=self.env.device)
         penalty = torch.zeros_like(action, dtype = torch.float, device=self.env.device)
 
-        # compute penalty if env has unvisited nodes 
+        # compute penalty if env has unvisited nodes
         is_last_step = self.env.td_state['is_last_step']
-        
+
         depot2nodes = torch.pairwise_distance(self.env.td_state['depot_loc'], self.env.td_state['coords'], eps=0, keepdim = False)
         if self.env.n_digits is not None:
             depot2nodes = torch.floor(self.env.n_digits * depot2nodes) / self.env.n_digits

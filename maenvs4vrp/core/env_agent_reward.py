@@ -39,4 +39,3 @@ class RewardFn:
         """
 
         raise NotImplementedError()
-    

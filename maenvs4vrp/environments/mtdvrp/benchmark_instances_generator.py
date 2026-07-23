@@ -1,18 +1,12 @@
 import torch
 from tensordict import TensorDict
-
 import os
 from os import path
-
 from typing import Optional, Dict
-
 import numpy as np
-
 from maenvs4vrp.core.env_generator_builder import InstanceBuilder
-
 from huggingface_hub import hf_hub_download
 import shutil
-
 import logging
 
 BENCHMARK_INSTANCES_PATH = 'mtdvrp/data/benchmark'
@@ -32,7 +26,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
     """
 
     @classmethod
-    def get_list_of_benchmark_instances(cls):
+    def get_list_of_instances(cls):
         """
         Get list of possible instances from benchmark files.
 
@@ -59,7 +53,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
 
             inst_dic[pset] = data_files
         return inst_dic
-    
+
     def check_instance_folders(base_dir, env):
         base_benchmark_dir = os.path.join(base_dir, env, "data/benchmark")
 
@@ -72,7 +66,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
                         log.warning(
                             f"Missing instance: {file_path}. If you wish to re-download the original benchmark files, delete your {env}/data/benchmark folder and instantiate the BenchmarkInstanceGenerator class again."
                         )
-    
+
     @classmethod
     def download_and_copy_instances(cls):
         """
@@ -93,11 +87,11 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         if os.path.isdir(directory_to_be_created):
             cls.check_instance_folders(base_dir, env)
 
-        if not (os.path.isdir(directory_to_be_created)):            
+        if not (os.path.isdir(directory_to_be_created)):
             os.makedirs(directory_to_be_created)
 
             log.warning(f"Downloading benchmark files from HuggingFace to {directory_to_be_created}...")
-            
+
             for variant in VARIANT_PRESETS:
                 for instance_type in ['val', 'test']:
                     for instance_name in ['100.npz', '50.npz']:
@@ -121,16 +115,18 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         problem_type:set = 'all',
         instance_type:str = None,
         set_of_instances:set = None,
+        instance_name:str = None,
+        list_of_instances = None,
         device: Optional[str] = 'cpu',
         batch_size: Optional[torch.Size] = 1000,
         seed: int = None
     ) -> None:
-        
+
         """
         Constructor. Create an instance space of one or several sets of data.
-        
+
         Args:
-            problem_type(set): Problem type. Defaults to "all".       
+            problem_type(set): Problem type. Defaults to "all".
             instance_type(str): Instance type. It must be "50_test", "100_test", "50_validation" or "100_validation". Defaults to None.
             set_of_instances(set): Set of instances paths. Defaults to None.
             device(str, optional): Type of processing. It can be "cpu" or "gpu". Defaults to "cpu".
@@ -148,6 +144,11 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         else:
             self._set_seed(seed)
 
+        if instance_name is not None:
+            instance_type = instance_name
+        if list_of_instances is not None:
+            set_of_instances = list_of_instances
+
         self.device = device
         if batch_size is None:
             batch_size = [1]
@@ -159,7 +160,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             problem_type = VARIANT_PRESETS
         assert problem_type is not None and len(problem_type)>0, f"Set of problem variants is not > 0."
         assert all(item in VARIANT_PRESETS for item in problem_type), f"Invalid variant preset."
-        assert instance_type in ['50_test', '100_test','50_validation', '100_validation'] or instance_type is None or instance_type == '', f"Instance type must be '50_test', '100_test','50_validation', '100_validation'." 
+        assert instance_type in ['50_test', '100_test','50_validation', '100_validation'] or instance_type is None or instance_type == '', f"Instance type must be '50_test', '100_test','50_validation', '100_validation'."
         assert len(set_of_instances)>0, f"Set of instances not > 0."
 
         if set_of_instances:
@@ -171,7 +172,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
     def load_set_of_instances(self, set_of_instances:set=None):
         """
         Load every instance on set_of_instances set.
-        
+
         Args:
             set_of_instances(set): Set of instances paths. Defaults to None.
 
@@ -183,7 +184,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         self.instances_data = dict()
         for instance_name in self.set_of_instances:
             instance = self.read_parse_instance_data(instance_name)
-            self.instances_data[instance_name] = instance  
+            self.instances_data[instance_name] = instance
 
 
     def read_parse_instance_data(self, instance_name:str)-> Dict:
@@ -193,7 +194,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         Args:
             instance_name(str): Instance path.
 
-        Returns: 
+        Returns:
             Dict: Instance data.
         """
 
@@ -216,8 +217,8 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         instance['num_nodes'] = data['locs'].shape[1]
 
         num_agents = instance['num_agents']
-        num_nodes = instance['num_nodes'] 
-        
+        num_nodes = instance['num_nodes']
+
         batch_size = data['locs'].shape[0]
         instance['batch_size'] = batch_size
 
@@ -257,9 +258,9 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         else:
             new_data['open_routes'] = torch.zeros((*self.batch_size, 1), dtype=torch.bool, device=self.device)
         if 'time_windows' in data.keys():
-            new_data['end_time'] = data['time_windows'][:,:,1].gather(1, torch.zeros((*self.batch_size, 1), 
+            new_data['end_time'] = data['time_windows'][:,:,1].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
-            new_data['start_time'] = data['time_windows'][:,:,0].gather(1, torch.zeros((*self.batch_size, 1), 
+            new_data['start_time'] = data['time_windows'][:,:,0].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
             new_data['tw_low'] = data['time_windows'][:,:,0]
             new_data['tw_high'] = data['time_windows'][:,:,1]
@@ -275,8 +276,8 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         instance['data'] = new_data
 
         return instance
-    
-    
+
+
     def get_instance(self, instance_name:str, num_agents:int=None) -> Dict:
         """
         Get an instance with custom number of agents.
@@ -297,16 +298,16 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         instance['num_depots'] = 1
 
         return instance
-    
-    
-    def random_sample_instance(self, 
+
+
+    def random_sample_instance(self,
                                instance_name:str=None,
                                num_depots: int = None,
                                num_agents: int = None,
                                num_nodes: int = None,
                                min_coords: float = None,
                                max_coords: float = None,
-                               capacity: int = None,
+                               capacity: Optional[int] = None,
                                service_time: float = None,
                                min_demands: int = None,
                                max_demands: int = None,
@@ -411,9 +412,9 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         if 'open_routes' in data.keys():
             new_data['open_routes'] = data['open_routes']
         if 'time_windows' in data.keys():
-            new_data['end_time'] = data['time_windows'][:,:,1].gather(1, torch.zeros((*self.batch_size, 1), 
+            new_data['end_time'] = data['time_windows'][:,:,1].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
-            new_data['start_time'] = data['time_windows'][:,:,0].gather(1, torch.zeros((*self.batch_size, 1), 
+            new_data['start_time'] = data['time_windows'][:,:,0].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
             new_data['tw_low'] = new_data['time_windows'][:,:,0]
             new_data['tw_high'] = new_data['time_windows'][:,:,1]
@@ -433,7 +434,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         new_instance['num_depots'] = num_depots
 
         return new_instance
-    
+
     def sample_name_from_set(self, seed:int=None)-> str:
         """
         Sample one instance from instance set.
@@ -449,7 +450,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         assert len(self.set_of_instances)>0, f"set_of_instances has to have at least one instance!"
 
         return list(self.set_of_instances)[torch.randint(0, len(self.set_of_instances), (1,)).item()]
-    
+
     def sample_instance(self,
                         sample_type: str = 'random',
                         instance_name:str=None,
@@ -458,7 +459,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
                         num_nodes: int = None,
                         min_coords: float = None,
                         max_coords: float = None,
-                        capacity: int = None,
+                        capacity: Optional[int] = None,
                         service_time: float = None,
                         min_demands: int = None,
                         max_demands: int = None,

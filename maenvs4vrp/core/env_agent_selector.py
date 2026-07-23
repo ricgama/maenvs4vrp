@@ -35,6 +35,6 @@ class BaseSelector():
             n/a.
 
         Returns:
-            selected_agent(Tensor): Next agent. 
+            selected_agent(Tensor): Next agent.
         """
         raise NotImplementedError()

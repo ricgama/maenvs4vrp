@@ -7,38 +7,88 @@ from os import path
 from typing import Dict, Optional
 from maenvs4vrp.core.env_generator_builder import InstanceBuilder
 
+import warnings
+import random
 
-BENCHMARK_INSTANCES_PATH = 'pdptw/data/benchmark'
+from huggingface_hub import HfApi, snapshot_download
+import shutil
+
+HF_REPO_ID = "maenvs4vrp/environments"
+INSTANCES_PATH = 'pdptw/data/benchmark'
+DATA_PATH = './pdptw/data/benchmark'
 
 class BenchmarkInstanceGenerator(InstanceBuilder):
     """
     PDPTW benchmark instance generation class.
     """
     @classmethod
-    def get_list_of_benchmark_instances(cls):
+    def get_list_of_instances(cls):
         """
         Get list of possible instances from benchmark files.
 
-        Args:
-            n/a.
+        Checks local data first. If any set is missing locally, checks HuggingFace
+        availability and issues a warning so the caller knows to instantiate
+        BenchmarkInstanceGenerator (which triggers the download).
 
         Returns:
-            None.
+            dict: Key 'Li&Lim'; value is a list of instance name strings, or an
+                  empty list when data is not available locally.
         """
         base_dir = path.dirname(path.dirname(path.abspath(__file__)))
+        local_root = path.join(base_dir, DATA_PATH)
 
-        return {'Li&Lim': [s.split('.')[0] for s in os.listdir(path.join(base_dir, BENCHMARK_INSTANCES_PATH, 'Li&Lim'))]}
+        result = {}
+        missing = []
 
-    def __init__(self, 
-                 instance_type:str='Li&Lim', 
-                 set_of_instances:set=None, 
+        for set_name in ('Li&Lim',):
+            set_dir = path.join(local_root, set_name)
+            if path.isdir(set_dir):
+                result[set_name] = sorted(
+                    s.split('.')[0] for s in os.listdir(set_dir)
+                    if not s.startswith('.')
+                )
+            else:
+                result[set_name] = []
+                missing.append(set_name)
+
+        if missing:
+            try:
+                api = HfApi()
+                if api.repo_exists(repo_id=HF_REPO_ID, repo_type="dataset"):
+                    warnings.warn(
+                        f"Benchmark instance sets {missing} are not available locally. "
+                        f"Instantiate BenchmarkInstanceGenerator to download them from "
+                        f"HuggingFace ('{HF_REPO_ID}').",
+                        RuntimeWarning,
+                    )
+                else:
+                    warnings.warn(
+                        f"Benchmark instance sets {missing} are not available locally "
+                        f"and the HuggingFace dataset '{HF_REPO_ID}' is not accessible.",
+                        RuntimeWarning,
+                    )
+            except Exception:
+                warnings.warn(
+                    f"Benchmark instance sets {missing} are not available locally "
+                    "and HuggingFace could not be reached.",
+                    RuntimeWarning,
+                )
+
+        return result
+
+    def __init__(self,
+                 num_agents:Optional[int]=None,
+                 num_nodes:Optional[int]=None,
+                 speed:Optional[float]=1.0,
+                 instance_name:Optional[str]='Li&Lim',
+                 list_of_instances:Optional[list]=None,
                  device: Optional[str] = "cpu",
                  batch_size: Optional[torch.Size] = None,
                  seed:int=None) -> None:
         """
         Constructor. Create an instance space of one or several sets of data.
-        
-        Args:       
+
+        Args:
             instance_type(str): Instance type. Can be "Solomon" or "Homberger". Defaults to "Solomon".
             set_of_instances(set): Set of instances file names. Defaults to None.
             device(str, optional): Type of processing. It can be "cpu" or "gpu". Defaults to "cpu".
@@ -55,6 +105,10 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         else:
             self._set_seed(seed)
 
+        self.num_agents = num_agents
+        self.num_nodes = num_nodes
+        self.speed = speed
+
         self.device = device
         if batch_size is None:
             batch_size = [1]
@@ -62,12 +116,112 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             batch_size = [batch_size] if isinstance(batch_size, int) else batch_size
         self.batch_size = torch.Size(batch_size)
 
-        assert instance_type in ['Li&Lim'], f"instance unknown type"
-        assert len(set_of_instances)>0, f"set_of_instances has to have at least one instance!"
-        if set_of_instances:
-            self.instance_type = instance_type
-            self.set_of_instances = set_of_instances
-            self.load_set_of_instances()
+        assert instance_name in ['Li&Lim'], f"instance unknown type"
+        self.instance_name = instance_name
+
+        dataset_available = self._ensure_dataset_exists()
+        assert dataset_available, f"dataset is not available for instance type '{self.instance_name}'"
+
+        if list_of_instances is not None:
+            self.list_of_instances = list_of_instances
+        else:
+            self.list_of_instances = self.get_list_of_instances().get(instance_name, [])
+
+        self.load_list_of_instances()
+
+    def _ensure_dataset_exists(self) -> bool:
+        """
+        Ensure dataset (or a dataset subfolder) exists locally.
+        """
+
+        base_dir = path.dirname(path.dirname(path.abspath(__file__)))
+        target_dir = path.join(base_dir, DATA_PATH)
+        local_instance_dir = path.join(target_dir, self.instance_name) if self.instance_name is not None else None
+
+        # Dataset already present
+        if os.path.isdir(target_dir) and (local_instance_dir is None or os.path.isdir(local_instance_dir)):
+            return True
+
+        api = HfApi()
+        if not api.repo_exists(repo_id=HF_REPO_ID, repo_type="dataset"):
+            warnings.warn(
+                f"Dataset '{HF_REPO_ID}' is not available on Hugging Face. "
+                "Falling back to random instance generation.",
+                RuntimeWarning,
+            )
+            return False
+
+        if self.instance_name is not None:
+            repo_files = api.list_repo_files(repo_id=HF_REPO_ID, repo_type="dataset")
+
+            candidate_roots = [
+                INSTANCES_PATH,
+                f"environments/{INSTANCES_PATH}"
+            ]
+            repo_instance_dir = None
+            for root in candidate_roots:
+                candidate = f"{root}/{self.instance_name}"
+                if any(repo_file.startswith(f"{candidate}/") for repo_file in repo_files):
+                    repo_instance_dir = candidate
+                    break
+
+            if repo_instance_dir is None:
+                warnings.warn(
+                    f"Instance subfolder '{self.instance_name}' was not found in '{HF_REPO_ID}' under "
+                    f"'{INSTANCES_PATH}'"
+                    "Falling back to random instance generation.",
+                    RuntimeWarning,
+                )
+                return False
+
+            print(f"Instance subfolder '{self.instance_name}' not found locally. Downloading from HuggingFace...")
+
+            snapshot_path = snapshot_download(
+                repo_id=HF_REPO_ID,
+                repo_type="dataset",
+                allow_patterns=[f"{repo_instance_dir}/**"],
+            )
+
+            remote_instance_dir = path.join(snapshot_path, *repo_instance_dir.split("/"))
+            if not os.path.isdir(remote_instance_dir):
+                raise RuntimeError(
+                    f"Downloaded snapshot does not contain '{repo_instance_dir}'."
+                )
+
+            os.makedirs(target_dir, exist_ok=True)
+            assert local_instance_dir is not None
+            shutil.copytree(remote_instance_dir, local_instance_dir, dirs_exist_ok=True)
+            print(f"Instance subfolder installed at: {local_instance_dir}")
+            return True
+
+        print("Dataset not found. Downloading snapshot from HuggingFace...")
+
+        # Download complete repo snapshot
+        snapshot_path = snapshot_download(
+            repo_id=HF_REPO_ID,
+            repo_type="dataset"
+            #local_dir_use_symlinks=False
+        )
+
+        print("Snapshot downloaded at:", snapshot_path)
+
+        # Find the folder named "data" inside the snapshot
+        dataset_root = None
+        for root, dirs, _ in os.walk(snapshot_path):
+            if "data" in dirs:
+                dataset_root = path.join(root, "data")
+                break
+
+        if dataset_root is None:
+            raise RuntimeError("Could not find 'data/' folder inside the snapshot.")
+
+        print("Found dataset folder:", dataset_root)
+
+        # Copy entire data folder preserving structure
+        shutil.copytree(dataset_root, target_dir, dirs_exist_ok=True)
+
+        print(f"Dataset installed at: {target_dir}")
+        return True
 
 
     def read_instance_data(self, instance_name:str)-> Dict:
@@ -77,13 +231,13 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         Args:
             instance_name(str): Instance file name.
 
-        Returns: 
+        Returns:
             Dict: Instance data.
         """
 
         base_dir = path.dirname(path.dirname(path.abspath(__file__)))
 
-        path_to_file = path.join(base_dir, BENCHMARK_INSTANCES_PATH, self.instance_type)
+        path_to_file = path.join(base_dir, INSTANCES_PATH, self.instance_name)
 
         benchmark_file = '{path_to_benchmark_instances}/{instance}.txt' \
                         .format(path_to_benchmark_instances=path_to_file,
@@ -140,31 +294,31 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         data['tw_high'] = time_windows[:, :, 1].clone()
 
         data['service_time'] = torch.tensor(service_time, dtype = torch.float, device=self.device).unsqueeze(0)
-        data['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1), 
+        data['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1),
                                                                           dtype=torch.int64, device=self.device)).squeeze(-1)
-        data['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1), 
+        data['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
-
+        data['speed'] = torch.ones((*self.batch_size, 1), dtype=torch.float, device=self.device)
 
         data['is_depot'] = torch.zeros((*self.batch_size, instance['num_nodes']), dtype=torch.bool, device=self.device)
         data['is_depot'][:, depot_idx] = True
         data['capacity'] = capacity * torch.ones((*self.batch_size, 1), dtype = torch.float, device=self.device)
 
-        data['pickup_idx'] = torch.tensor(pickup_idx, dtype=torch.long, device=self.device).unsqueeze(0)   
-        data['delivery_idx']  = torch.tensor(delivery_idx, dtype=torch.long, device=self.device).unsqueeze(0)    
+        data['pickup_idx'] = torch.tensor(pickup_idx, dtype=torch.long, device=self.device).unsqueeze(0)
+        data['delivery_idx']  = torch.tensor(delivery_idx, dtype=torch.long, device=self.device).unsqueeze(0)
 
-        data['is_pickup'] = data['pickup_idx'].eq(0)   
+        data['is_pickup'] = data['pickup_idx'].eq(0)
         data['is_pickup'][:, depot_idx] = False
         data['is_delivery']  = data['delivery_idx'].eq(0)
         data['is_delivery'][:, depot_idx] = False
 
         instance['data'] = data
 
-        if self.instance_type in ['Li&Lim']:
+        if self.instance_name in ['Li&Lim']:
             instance['n_digits'] = 100.0
         return instance
 
-    def get_instance(self, instance_name:str, num_agents:int=None) -> Dict:
+    def get_instance(self, instance_name:Optional[str] =None, num_agents:Optional[int]=None) -> Dict:
         """
         Get an instance with custom number of agents.
 
@@ -184,38 +338,33 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
 
         return instance
 
-    def load_set_of_instances(self, set_of_instances:set=None):
+    def load_list_of_instances(self, list_of_instances:Optional[list]=None):
         """
         Load every instance on set_of_instances set.
-        
+
         Args:
             set_of_instances(set): Set of instances file names. Defaults to None.
 
         Returns:
             None.
         """
-        if set_of_instances:
-            self.set_of_instances = set_of_instances
+        if list_of_instances:
+            self.list_of_instances = list_of_instances
         self.instances_data = dict()
-        for instance_name in self.set_of_instances:
+        for instance_name in self.list_of_instances:
             instance = self.read_instance_data(instance_name)
-            self.instances_data[instance_name] = instance            
+            self.instances_data[instance_name] = instance
 
-    def random_sample_instance(self, 
-                               instance_name:str=None,
-                               num_agents:int=None, 
-                               num_nodes:int=None, 
+    def random_sample_instance(self,
+                               instance_name:Optional[str]=None,
                                seed:int=None,
                                device:Optional[str]="cpu")-> Dict:
         """
         Sample one instance from instance space, randomly adjusting the nodes.
 
         Args:
-            instance_name(str): Instance file name. Defaults to None.
-            num_agents(int):  Total number of agents. Defaults to None.
-            num_nodes(int):  Total number of nodes. Defaults to None.
             seed(int): Random number generator seed. Defaults to None.
-
+            device(str): Type of processing. It can be "cpu" or "gpu". Defaults to "cpu".
         Returns:
             Dict: Instance data.
         """
@@ -223,19 +372,22 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             self._set_seed(seed)
 
         new_instance = dict()
-        instance = self.get_instance(instance_name, num_agents)
+        if instance_name is None:
+            instance_name = self.sample_name_from_list()
+        instance = self.get_instance(instance_name, self.num_agents)
+        print(self.instance_name)
 
         new_instance['num_agents'] = instance['num_agents']
 
-        if num_nodes is not None:
-            num_nodes = min(num_nodes, instance['num_nodes'])
-            new_instance['num_nodes'] = num_nodes
+        if self.num_nodes is not None:
+            num_nodes = min(self.num_nodes, instance['num_nodes'])
+            new_instance['num_nodes'] = self.num_nodes
         else:
             new_instance['num_nodes'] = instance['num_nodes']
 
         new_instance['name'] = instance['name'] + '_samp'
 
-        new_instance['n_digits'] = instance['n_digits'] 
+        new_instance['n_digits'] = instance['n_digits']
 
         data = instance['data']
 
@@ -270,39 +422,42 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         new_data['delivery_idx'] = torch.zeros((*self.batch_size, new_instance['num_nodes']), dtype = torch.long, device=self.device)
 
         new_data['pickup_idx'].scatter_(1, delivery_idx, pickup_idx) #For pickup tasks, the PICKUP index is 0, whereas the DELIVERY sibling gives the index of the corresponding delivery task
-        new_data['delivery_idx'].scatter_(1, pickup_idx, delivery_idx)  # For delivery tasks, the PICKUP index gives the index of the corresponding pickup task. 
+        new_data['delivery_idx'].scatter_(1, pickup_idx, delivery_idx)  # For delivery tasks, the PICKUP index gives the index of the corresponding pickup task.
 
         new_data['is_pickup'] = data['is_pickup'][:, index]
         new_data['is_delivery']  = data['is_delivery'][:, index]
+        new_data['speed'] = data['speed']
 
         new_instance['data'] = new_data
         return new_instance
 
-    def sample_name_from_set(self, seed:int=None)-> str:
+    def sample_name_from_list(self, seed:Optional[int]=None)-> str:
         """
-        Sample one instance from instance set.
+        Sample one instance from instance list.
 
         Args:
-            seed(int): Random number generator seed. Defaults to None.
+            seed(int, optional): Random number generator seed. Defaults to None.
 
         Returns:
-            str: Instance sample name.
+            str: Instance name.
         """
         if seed is not None:
             self._set_seed(seed)
-        assert len(self.set_of_instances)>0, f"set_of_instances has to have at least one instance!"
+        assert len(self.list_of_instances)>0, f"list_of_instances has to have at least one instance!"
 
-        return list(self.set_of_instances)[torch.randint(0, len(self.set_of_instances), (1,)).item()]
+        return random.choice(self.list_of_instances)
 
-    def sample_instance(self, num_agents:int=None, 
-                        num_nodes:int=None, 
-                        capacity:int=None, 
-                        service_times:float=None, 
-                        instance_name:str=None, 
-                        sample_type:str='random',
+    def sample_instance(self,
+                        num_agents:Optional[int]=None,
+                        num_nodes:Optional[int]=None,
+                        capacity:Optional[int]=None,
+                        service_times:Optional[float]=None,
+                        speed:Optional[float]=None,
+                        instance_name:Optional[str]=None,
+                        sample_type:Optional[str]='random',
                         batch_size: Optional[torch.Size] = None,
                         n_augment: Optional[int] = None,
-                        seed:int=None,
+                        seed:Optional[int]=None,
                         device:Optional[str]="cpu")-> Dict:
         """
         Sample one instance from instance space.
@@ -312,6 +467,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             num_nodes(int): Total number of nodes. Defaults to None.
             capacity(int): Capacity of the agents. Defaults to None.
             service_times(float): Service time in the nodes. Defaults to None.
+            speed(float): Vehicles' speed. Defaults to None.
             instance_name(str): Instance name. Defaults to None.
             sample_type(str): Sample type. It can be "random" or something else for "first n". Defaults to "random".
             batch_size(torch.Size or None): Batch size. Defaults to None.
@@ -324,19 +480,24 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         if seed is not None:
             self._set_seed(seed)
 
+        if num_agents is not None:
+            self.num_agents = num_agents
+        if num_nodes is not None:
+            self.num_nodes = num_nodes
+        if speed is not None:
+            self.speed = speed
+
         if instance_name==None:
-            instance_name = self.sample_name_from_set(seed=seed)
+            instance_name = self.sample_name_from_list(seed=seed)
         else:
             instance_name = instance_name
-            
+
         if num_nodes is not None:
             assert num_nodes>0, f"number of nodes must be grater them 0!"
             assert (num_nodes-1) % 2 == 0, f"number of services must be even"
 
         if sample_type=='random':
             instance = self.random_sample_instance(instance_name=instance_name,
-                                                   num_agents=num_agents, 
-                                                   num_nodes=num_nodes, 
                                                    seed=seed,
                                                    device=device)
         else:
@@ -347,5 +508,5 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
 
 if __name__ == '__main__':
 
-    generator = BenchmarkInstanceGenerator(instance_type='Li&Lim', set_of_instances={'lc101'})
+    generator = BenchmarkInstanceGenerator(instance_name='Li&Lim', list_of_instances={'lc101'})
     generator.sample_instance(num_agents=3, num_nodes=9, seed=1)

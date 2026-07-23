@@ -14,7 +14,7 @@ class DenseReward(RewardFn):
         """
         Constructor.
 
-        Args: 
+        Args:
             n/a.
 
         Returns:
@@ -61,7 +61,7 @@ class SparseReward(RewardFn):
         """
         Constructor.
 
-        Args: 
+        Args:
             n/a.
 
         Returns:
@@ -96,7 +96,7 @@ class SparseReward(RewardFn):
         reward = torch.zeros_like(action, dtype = torch.float, device=self.env.device)
         penalty = torch.zeros_like(action, dtype = torch.float, device=self.env.device)
 
-        # compute penalty if env has unvisited nodes 
+        # compute penalty if env has unvisited nodes
         is_last_step = self.env.td_state['is_last_step']
         final_reward = self.env.td_state['agents']['cum_profit'].sum(-1, keepdim = True)
         reward[is_last_step] = final_reward[is_last_step]

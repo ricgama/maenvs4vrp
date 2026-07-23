@@ -1,0 +1,1454 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html"><link rel="search" title="Search" href="../../../../search.html">
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+        <title>maenvs4vrp.environments.pdptw.observations - maenvs4vrp 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">maenvs4vrp 0.2.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  <span class="sidebar-brand-text">maenvs4vrp 0.2.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../content/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../content/start.html">MAEnvs4VRP Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../content/test.html">Unit Testing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MAEnvs4VRP Architecture</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../core/modules.html">Modules</a><input aria-label="Toggle navigation of Modules" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../core/Agent%20Reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../core/Agent%20Selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../core/Environment/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../core/Instance%20Generator/instance-generator.html">Instance Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../core/Observations/observations.html">Observations</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/cvrp/cvrp.html">CVRP</a><input aria-label="Toggle navigation of CVRP" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrp/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/cvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/cvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/cvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/cvrpstw/cvrpstw.html">CVRPSTW</a><input aria-label="Toggle navigation of CVRPSTW" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrpstw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrpstw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrpstw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/cvrpstw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/cvrpstw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/cvrpstw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/cvrpstw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrpstw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/cvrptw/cvrptw.html">CVRPTW</a><input aria-label="Toggle navigation of CVRPTW" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/cvrptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/cvrptw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/cvrptw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/cvrptw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/cvrptw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/dsvrptw/dsvrptw.html">DSVRPTW</a><input aria-label="Toggle navigation of DSVRPTW" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/dsvrptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/dsvrptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/dsvrptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/dsvrptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/dsvrptw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/dsvrptw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/dsvrptw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/dsvrptw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/dvrptw/dvrptw.html">DVRPTW</a><input aria-label="Toggle navigation of DVRPTW" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/dvrptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/dvrptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/dvrptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/dvrptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/dvrptw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/dvrptw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/dvrptw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/dvrptw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/gmtdvrp/gmtdvrp.html">GMTDVRP</a><input aria-label="Toggle navigation of GMTDVRP" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/gmtdvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/gmtdvrp/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/gmtdvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/gmtdvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/gmtdvrp/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/gmtdvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/gmtdvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/gmtdvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/gmtvrp/gmtvrp.html">GMTVRP</a><input aria-label="Toggle navigation of GMTVRP" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/gmtvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/gmtvrp/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/gmtvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/gmtvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/gmtvrp/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/gmtvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/gmtvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/gmtvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/hcvrp/hcvrp.html">HCVRP</a><input aria-label="Toggle navigation of HCVRP" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/hcvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/hcvrp/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/hcvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/hcvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/hcvrp/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/hcvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/hcvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/hcvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/mdvrptw/mdvrptw.html">MDVRPTW</a><input aria-label="Toggle navigation of MDVRPTW" class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mdvrptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mdvrptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mdvrptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/mdvrptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mdvrptw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mdvrptw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mdvrptw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mdvrptw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/mtdvrp/mtdvrp.html">MTDVRP</a><input aria-label="Toggle navigation of MTDVRP" class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mtdvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mtdvrp/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mtdvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/mtdvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mtdvrp/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mtdvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mtdvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mtdvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/mtvrp/mtvrp.html">MTVRP</a><input aria-label="Toggle navigation of MTVRP" class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mtvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mtvrp/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mtvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/mtvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mtvrp/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mtvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/mtvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/mtvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/pcvrp/pcvrp.html">PCVRP</a><input aria-label="Toggle navigation of PCVRP" class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pcvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pcvrp/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pcvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/pcvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/pcvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/pcvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pcvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/pcvrptw/pcvrptw.html">PCVRPTW</a><input aria-label="Toggle navigation of PCVRPTW" class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pcvrptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pcvrptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pcvrptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/pcvrptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/pcvrptw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/pcvrptw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/pcvrptw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pcvrptw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/pdptw/pdptw.html">PDPTW</a><input aria-label="Toggle navigation of PDPTW" class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pdptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pdptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pdptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/pdptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/pdptw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/pdptw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/pdptw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/pdptw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/sdvrptw/sdvrptw.html">SDVRPTW</a><input aria-label="Toggle navigation of SDVRPTW" class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/sdvrptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/sdvrptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/sdvrptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/sdvrptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/sdvrptw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/sdvrptw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/sdvrptw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/sdvrptw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/top/top.html">TOP</a><input aria-label="Toggle navigation of TOP" class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/top/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/top/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/top/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/top/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/top/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/top/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/top/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../environments/toptw/toptw.html">TOPTW</a><input aria-label="Toggle navigation of TOPTW" class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/toptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/toptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/toptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../environments/toptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/toptw/generation/benchmark-generation/benchmark-generation.html">Benchmark Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/toptw/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../environments/toptw/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../environments/toptw/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parallel Environments</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../parallel_environments/cvrp/cvrp.html">CVRP</a><input aria-label="Toggle navigation of CVRP" class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/cvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/cvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../parallel_environments/cvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../parallel_environments/cvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../parallel_environments/cvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/cvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../parallel_environments/pcvrp/pcvrp.html">PCVRP</a><input aria-label="Toggle navigation of PCVRP" class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/pcvrp/environment/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/pcvrp/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/pcvrp/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../parallel_environments/pcvrp/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../parallel_environments/pcvrp/generation/instance-generation/instance-generation.html">Instance Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../parallel_environments/pcvrp/generation/toy-generation/toy-generation.html">Toy Instance Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/pcvrp/observations/observations.html">Observations</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../parallel_environments/pcvrptw/pcvrptw.html">PCVRPTW</a><input aria-label="Toggle navigation of PCVRPTW" class="toctree-checkbox" id="toctree-checkbox-40" name="toctree-checkbox-40" role="switch" type="checkbox"/><label for="toctree-checkbox-40"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/pcvrptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/pcvrptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/pcvrptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../parallel_environments/pcvrptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-41" name="toctree-checkbox-41" role="switch" type="checkbox"/><label for="toctree-checkbox-41"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../parallel_environments/top/top.html">TOP</a><input aria-label="Toggle navigation of TOP" class="toctree-checkbox" id="toctree-checkbox-42" name="toctree-checkbox-42" role="switch" type="checkbox"/><label for="toctree-checkbox-42"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/top/environment/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/top/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/top/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../parallel_environments/top/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-43" name="toctree-checkbox-43" role="switch" type="checkbox"/><label for="toctree-checkbox-43"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../parallel_environments/toptw/toptw.html">TOPTW</a><input aria-label="Toggle navigation of TOPTW" class="toctree-checkbox" id="toctree-checkbox-44" name="toctree-checkbox-44" role="switch" type="checkbox"/><label for="toctree-checkbox-44"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/toptw/environment/environment.html">Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/toptw/agent-reward/agent-reward.html">Agent Rewards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../parallel_environments/toptw/agent-selector/agent-selector.html">Agent Selector</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../parallel_environments/toptw/generation/generation.html">Generation</a><input aria-label="Toggle navigation of Generation" class="toctree-checkbox" id="toctree-checkbox-45" name="toctree-checkbox-45" role="switch" type="checkbox"/><label for="toctree-checkbox-45"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Neuro Solvers</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../neuro_solvers/attention_model/attention_model.html">Attention Model (AM)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../neuro_solvers/two_d_ptr/two_d_ptr.html">2D-Ptr</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../utils/plotting.html">Plotting Tools</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for maenvs4vrp.environments.pdptw.observations</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensordict</span><span class="w"> </span><span class="kn">import</span> <span class="n">TensorDict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">maenvs4vrp.core.env_observation_builder</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObservationBuilder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">maenvs4vrp.core.env</span><span class="w"> </span><span class="kn">import</span> <span class="n">AECEnv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span>
+
+
+<div class="viewcode-block" id="Observations">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Observations</span><span class="p">(</span><span class="n">ObservationBuilder</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;PDPTW observations class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">POSSIBLE_NODES_STATIC_FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x_coordinate&#39;</span><span class="p">,</span> <span class="s1">&#39;y_coordinate&#39;</span><span class="p">,</span> <span class="s1">&#39;tw_low&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;tw_high&#39;</span><span class="p">,</span> <span class="s1">&#39;demand&#39;</span><span class="p">,</span> <span class="s1">&#39;service_time&#39;</span><span class="p">,</span> <span class="s1">&#39;tw_high_minus_tw_low_div_max_dur&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;x_coordinate_min_max&#39;</span><span class="p">,</span> <span class="s1">&#39;y_coordinate_min_max&#39;</span><span class="p">,</span> <span class="s1">&#39;is_depot&#39;</span><span class="p">,</span> <span class="s1">&#39;is_pickup&#39;</span><span class="p">,</span> <span class="s1">&#39;is_delivery&#39;</span><span class="p">]</span>
+
+    <span class="n">POSSIBLE_NODES_DYNAMIC_FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time2open_div_end_time&#39;</span><span class="p">,</span> <span class="s1">&#39;time2close_div_end_time&#39;</span><span class="p">,</span> <span class="s1">&#39;arrive2node_div_end_time&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;time2open_after_step_div_end_time&#39;</span><span class="p">,</span> <span class="s1">&#39;time2close_after_step_div_end_time&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;time2end_after_step_div_end_time&#39;</span><span class="p">,</span> <span class="s1">&#39;fract_time_after_step_div_end_time&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;reachable_frac_agents&#39;</span><span class="p">,</span> <span class="s1">&#39;is_pending&#39;</span><span class="p">]</span>
+
+    <span class="n">POSSIBLE_AGENT_FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x_coordinate&#39;</span><span class="p">,</span> <span class="s1">&#39;y_coordinate&#39;</span><span class="p">,</span><span class="s1">&#39;x_coordinate_min_max&#39;</span><span class="p">,</span> <span class="s1">&#39;y_coordinate_min_max&#39;</span><span class="p">,</span> <span class="s1">&#39;frac_current_time&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;frac_current_load&#39;</span><span class="p">,</span> <span class="s1">&#39;arrivedepot_div_end_time&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;frac_feasible_nodes&#39;</span><span class="p">]</span>
+
+    <span class="n">POSSIBLE_OTHER_AGENTS_FEATURES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x_coordinate&#39;</span><span class="p">,</span> <span class="s1">&#39;y_coordinate&#39;</span><span class="p">,</span><span class="s1">&#39;x_coordinate_min_max&#39;</span><span class="p">,</span> <span class="s1">&#39;y_coordinate_min_max&#39;</span><span class="p">,</span> <span class="s1">&#39;frac_current_time&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;frac_current_load&#39;</span><span class="p">,</span> <span class="s1">&#39;dist2depot_div_end_time&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;dist2agent_div_end_time&#39;</span><span class="p">,</span> <span class="s1">&#39;frac_feasible_nodes&#39;</span><span class="p">,</span><span class="s1">&#39;time_delta2agent_div_max_dur&#39;</span><span class="p">,</span> <span class="s1">&#39;was_last&#39;</span><span class="p">]</span>
+
+    <span class="n">POSSIBLE_GLOBAL_FEATURES</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;frac_demands&#39;</span><span class="p">,</span> <span class="s1">&#39;frac_fleet_load_capacity&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;frac_done_agents&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Observations.__init__">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_list</span><span class="p">:</span><span class="n">Dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            feature_list(Dict): Dictionary containing observation features list to be available to the agent. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_feature_list</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nodes_static&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;x_coordinate&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;feat&#39;</span><span class="p">:</span> <span class="s1">&#39;x_coordinate&#39;</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                                    <span class="s1">&#39;y_coordinate&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;feat&#39;</span><span class="p">:</span> <span class="s1">&#39;y_coordinate&#39;</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                                    <span class="s1">&#39;demand&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;feat&#39;</span><span class="p">:</span> <span class="s1">&#39;demand&#39;</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+                                    <span class="s1">&#39;is_depot&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;feat&#39;</span><span class="p">:</span> <span class="s1">&#39;is_depot&#39;</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}},</span>
+                                    <span class="s1">&#39;nodes_dynamic&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                                    <span class="s1">&#39;agent&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;frac_current_load&#39;</span><span class="p">],</span>
+                                    <span class="s1">&#39;other_agents&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                                    <span class="s1">&#39;all_agents&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                                    <span class="s1">&#39;global&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="s1">&#39;frac_fleet_load_capacity&#39;</span><span class="p">,</span> <span class="s1">&#39;frac_done_agents&#39;</span><span class="p">]}</span>
+
+        <span class="k">if</span> <span class="n">feature_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">feature_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_feature_list</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_list</span> <span class="o">=</span> <span class="n">feature_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">possible_nodes_static_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">POSSIBLE_NODES_STATIC_FEATURES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">possible_nodes_dynamic_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">POSSIBLE_NODES_DYNAMIC_FEATURES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">possible_agent_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">POSSIBLE_AGENT_FEATURES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">possible_other_agents_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">POSSIBLE_OTHER_AGENTS_FEATURES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">possible_all_agents_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">POSSIBLE_ALL_AGENTS_FEATURES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">possible_global_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">POSSIBLE_GLOBAL_FEATURES</span></div>
+
+
+<div class="viewcode-block" id="Observations.set_env">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.set_env">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_env</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span><span class="n">AECEnv</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set environment.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env(AECEnv): Environment.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_env</span><span class="p">(</span><span class="n">env</span><span class="p">)</span></div>
+
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_static_feat_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes static features dimensions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Nodes static features dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nodes_static&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dim&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> \
+                    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nodes_static&#39;</span><span class="p">)])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_dynamic_feat_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes dynamic features dimensions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Nodes dynamic features dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nodes_dynamic&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_feat_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes features dimensions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Nodes features dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nodes_static_feat_dim</span><span class="p">()</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">get_nodes_dynamic_feat_dim</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_agent_feat_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agent features dimensions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Agent features dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;agent&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_other_agents_feat_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Other agent features dimensions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Other agent features dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;other_agents&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_global_feat_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Global features dimensions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Global features dimensions.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_list</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;global&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+
+
+    <span class="c1">## static features</span>
+<div class="viewcode-block" id="Observations.get_feat_x_coordinate">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_x_coordinate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_x_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instance nodes X coordinates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Instance nodes X coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">][:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_y_coordinate">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_y_coordinate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_y_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Instance nodes Y coordinates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Instance nodes Y coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">][:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_x_coordinate_min_max">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_x_coordinate_min_max">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_x_coordinate_min_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Min-max normalized X coordinates of instance nodes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Min. and max. x coordinates of instance nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ncoord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_max_normalization2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">])</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">ncoord</span><span class="p">[:,:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_y_coordinate_min_max">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_y_coordinate_min_max">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_y_coordinate_min_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Min-max normalized Y coordinates of instance nodes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Min-max normalized Y coordinates of instance nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ncoord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_max_normalization2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">])</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">ncoord</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_tw_low">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_tw_low">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_tw_low</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes time windows starting times.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes time windows starting times.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;tw_low&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;max_tour_duration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_tw_high">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_tw_high">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_tw_high</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes time windows ending times.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes time windows ending times.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;tw_high&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;max_tour_duration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_demand">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_demand">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes demand.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes demand.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;demands&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_service_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_service_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_service_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes service time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes service time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;service_time&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_tw_high_minus_tw_low_div_max_dur">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_tw_high_minus_tw_low_div_max_dur">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_tw_high_minus_tw_low_div_max_dur</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes time window amplitude divided by max tour duration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes time window amplitude divided by max tour duration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tw_high</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feat_tw_high</span><span class="p">()</span>
+        <span class="n">tw_low</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feat_tw_low</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">tw_high</span><span class="o">-</span><span class="n">tw_low</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;max_tour_duration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_is_depot">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_is_depot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_is_depot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if node is depot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: If the node is depot or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;is_depot&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_is_pickup">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_is_pickup">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_is_pickup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if node is pickup.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: If the node is pickup or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;is_pickup&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_is_delivery">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_is_delivery">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_is_delivery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if node is delivery.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: If the node is delivery or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;is_delivery&#39;</span><span class="p">]</span></div>
+
+
+    <span class="c1">## dynamic features</span>
+<div class="viewcode-block" id="Observations.get_feat_time2open_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_time2open_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_time2open_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes time to open divided by end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes time to open divided by end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;tw_low&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_time&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_time2close_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_time2close_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_time2close_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes time to close divided by end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes time to close divided by end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;tw_high&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_time&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_arrive2node_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_arrive2node_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_arrive2node_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agent arriving time to nodes divided by end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agent arriving time to nodes divided by end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;coords&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">ptime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">time2j</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pairwise_distance</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">],</span> <span class="n">eps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">arrivej</span> <span class="o">=</span> <span class="n">ptime</span> <span class="o">+</span> <span class="n">time2j</span>
+        <span class="k">return</span> <span class="n">arrivej</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_time2open_after_step_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_time2open_after_step_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_time2open_after_step_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes time to open, after agent step, divided by end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes time to open, after agent step, divided by end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">arrivej</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feat_arrive2node_div_end_time</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;tw_low&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">arrivej</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_time2close_after_step_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_time2close_after_step_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_time2close_after_step_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nodes time to close, after agent step, divided by end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Nodes time to close, after agent step, divided by end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">arrivej</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feat_arrive2node_div_end_time</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;tw_high&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">arrivej</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_time2end_after_step_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_time2end_after_step_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_time2end_after_step_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Time end, after agent step to node, divided by end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Time end, after agent step to node, divided by end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">arrivej</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feat_arrive2node_div_end_time</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">arrivej</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_fract_time_after_step_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_fract_time_after_step_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_fract_time_after_step_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fraction of time left, after agent step to node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Fraction of time left, after agent step to node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">arrivej</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_feat_arrive2node_div_end_time</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="p">(</span><span class="n">arrivej</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_reachable_frac_agents">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_reachable_frac_agents">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_reachable_frac_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Feasible nodes per agent.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Feasible nodes per agent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;action_mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">num_agents</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_is_pending">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_is_pending">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_is_pending</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Pending deliveries.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Pending deliveries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;pending_deliveries&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+
+    <span class="c1">## Agent features</span>
+<div class="viewcode-block" id="Observations.get_feat_agent_x_coordinate">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agent_x_coordinate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agent_x_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Current agent X coordinate.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Current agent X coordinate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_agent_y_coordinate">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agent_y_coordinate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agent_y_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Current agent Y coordinate.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Current agent Y coordinate.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_agent_x_coordinate_min_max">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agent_x_coordinate_min_max">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agent_x_coordinate_min_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Current agent min-max normalized X location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Current agent min-max normalized X location.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ncoord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_max_normalization2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">])</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">ncoord</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_agent_y_coordinate_min_max">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agent_y_coordinate_min_max">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agent_y_coordinate_min_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Current agent min-max normalized Y location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Current agent min-max normalized Y location.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ncoord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_max_normalization2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">])</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">ncoord</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_agent_frac_current_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agent_frac_current_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agent_frac_current_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agent fraction of time elapsed.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agent fraction of time elapsed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span>  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_time&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;max_tour_duration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_agent_frac_current_load">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agent_frac_current_load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agent_frac_current_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agent fraction of used capacity.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agent fraction of used capacity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span>  <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_load&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;capacity&#39;</span><span class="p">])</span>  <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_agent_arrivedepot_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agent_arrivedepot_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agent_arrivedepot_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agent time to depot divided by end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agent time to depot divided by end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;coords&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">ptime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">time2depot</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pairwise_distance</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;depot_loc&#39;</span><span class="p">],</span> <span class="n">eps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">arrivej</span> <span class="o">=</span> <span class="n">ptime</span> <span class="o">+</span> <span class="n">time2depot</span>
+
+        <span class="n">feat</span> <span class="o">=</span> <span class="p">(</span><span class="n">arrivej</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_agent_frac_feasible_nodes">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agent_frac_feasible_nodes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agent_frac_feasible_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fraction of current agent feasible nodes, in order to the total number of instance nodes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Fraction of current agent feasible nodes, in order to the total number of instance nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;action_mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">num_nodes</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_agents_dist2depot_div_end_time">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_agents_dist2depot_div_end_time">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_agents_dist2depot_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fraction of current agent distance to depot compared to its end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Fraction of current agent distance to depot compared to its end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">locs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pairwise_distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;depot_loc&#39;</span><span class="p">],</span> <span class="n">locs</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span>  <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+    <span class="c1">## Other agents features</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_x_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Other agents X coordinates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents X coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_y_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Other agents Y coordinates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents Y coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_x_coordinate_min_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Other agents min-max normalized X location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents min-max normalized X location.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ncoord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_max_normalization2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">])</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">ncoord</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_y_coordinate_min_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Other agents min-max normalized Y location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents min-max normalized Y location.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ncoord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_max_normalization2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">])</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="n">ncoord</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_frac_current_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agents fraction of elapsed time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents fraction of elapsed time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_time&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feats</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_frac_current_load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agents fraction of used capacity.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents fraction of used capacity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_load&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feats</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_frac_feasible_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fraction of agents feasible nodes, in order to the total number of instance nodes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Fraction of agents feasible nodes, in order to the total number of instance nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;action_mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">num_nodes</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_dist2agent_div_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Other agents distance to active agent divided by end time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents distance to active agent divided by end time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">locs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;coords&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pairwise_distance</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">locs</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdim</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span>  <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;end_time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_time_delta2agent_div_max_dur</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Difference between agents time and current agent time, divided by max. tour duration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Difference between agents time and current agent time, divided by max. tour duration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_time&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent&#39;</span><span class="p">][</span><span class="s1">&#39;cur_time&#39;</span><span class="p">]</span> <span class="p">)</span><span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;max_tour_duration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feats</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_other_agents_was_last</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Last agent performing an action.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Last agent performing an action.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feats</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;active_agents_mask&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span><span class="o">.</span><span class="n">scatter_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent_idx&#39;</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;cur_agent_idx&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">feats</span>
+
+    <span class="c1">## All agents features</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_all_agents_x_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All agents X coordinates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents X coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_all_agents_y_coordinate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        All agents Y coordinates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Agents Y coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s2">&quot;coords&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_node_idx&#39;</span><span class="p">][:,:,</span><span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">loc</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span>
+
+
+
+    <span class="c1">## Global features</span>
+
+<div class="viewcode-block" id="Observations.get_feat_global_frac_done_agents">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_global_frac_done_agents">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_global_frac_done_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fraction of done agents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Fraction of done agents.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;active_agents_mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">num_agents</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_global_frac_demands">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_global_frac_demands">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_global_frac_demands</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fraction of served demands.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Fraction of served demands.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="s1">&#39;cur_demands&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;demands&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Observations.get_feat_global_frac_fleet_load_capacity">
+<a class="viewcode-back" href="../../../../environments/pdptw/observations/observations.html#maenvs4vrp.environments.pdptw.observations.Observations.get_feat_global_frac_fleet_load_capacity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feat_global_frac_fleet_load_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fraction of fleet load capacity.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n/a.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            torch.Tensor: Fraction of fleet load capacity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;cur_load&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">capacity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">td_state</span><span class="p">[</span><span class="s1">&#39;agents&#39;</span><span class="p">][</span><span class="s1">&#39;capacity&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">feat</span> <span class="o">/</span> <span class="p">(</span><span class="n">capacity</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">num_agents</span><span class="p">)</span></div>
+</div>
+
+
+    <span class="c1"># --------------------------------------------------------------------------------------</span>
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, maenvs4vrp
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../_static/documentation_options.js?v=938c9ccc"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    </body>
+</html>

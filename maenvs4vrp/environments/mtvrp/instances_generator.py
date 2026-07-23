@@ -1,5 +1,5 @@
 """
-Adapted from: https://github.com/ai4co/routefinder/blob/main/routefinder/envs/mtvrp/generator.py 
+Adapted from: https://github.com/ai4co/routefinder/blob/main/routefinder/envs/mtvrp/generator.py
 """
 
 
@@ -98,14 +98,14 @@ class InstanceGenerator(InstanceBuilder):
         benchmark_instances = {}
 
         generated = os.listdir(os.path.join(base_dir, GENERATED_INSTANCES_PATH))
-        
+
         for folder in generated:
             benchmark_instances[folder] = {}
             benchmark_instances[folder]['validation'] = []
             benchmark_instances[folder]['test'] = []
 
             if mixed:
-            
+
                 for problem_type in VARIANT_PRESETS:
                     val_path = os.path.join(GENERATED_INSTANCES_PATH, folder, problem_type, 'validation')
                     test_path = os.path.join(GENERATED_INSTANCES_PATH, folder, problem_type, 'test')
@@ -131,7 +131,7 @@ class InstanceGenerator(InstanceBuilder):
                     for s in os.listdir(os.path.join(base_dir, test_path)):
                         test = test_path + '/' + s.split('.')[0]
                         benchmark_instances[folder]['test'].append(test)
-    
+
         return benchmark_instances
 
 
@@ -147,7 +147,7 @@ class InstanceGenerator(InstanceBuilder):
         """
         Constructor. Instance generator.
 
-        Args:       
+        Args:
             instance_type(str): Instance type. Can be "validation" or "test". Defaults to "validation".
             set_of_instances(set):  Set of instances file names. Defaults to None.
             device(str, optional): Type of processing. It can be "cpu" or "gpu". Defaults to "cpu".
@@ -162,7 +162,7 @@ class InstanceGenerator(InstanceBuilder):
             self._set_seed(self.DEFAULT_SEED)
         else:
             self._set_seed(seed)
-        
+
         self.device = device
 
         if batch_size is None:
@@ -182,24 +182,24 @@ class InstanceGenerator(InstanceBuilder):
         self,
         set_of_instances:set = None
     ):
-        
+
         """
         Load every instance on set_of_instances set.
-        
+
         Args:
             set_of_instances(set): Set of instances file names. Defaults to None.
 
         Returns:
             None.
         """
-        
+
         if set_of_instances:
             self.set_of_instances = set_of_instances
         self.instances_data = dict()
         for instance_name in self.set_of_instances:
             instance = self.read_instance_data(instance_name)
             self.instances_data[instance_name] = instance
-    
+
     def read_instance_data(self, instance_name:str):
 
         """
@@ -208,10 +208,10 @@ class InstanceGenerator(InstanceBuilder):
         Args:
             instance_name(str): Instance file name.
 
-        Returns: 
-            Dict: Instance data. 
+        Returns:
+            Dict: Instance data.
         """
-        
+
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         generated_file = '{path_to_generated_instances}/{instance}.pkl' \
                         .format(path_to_generated_instances=base_dir,
@@ -221,9 +221,9 @@ class InstanceGenerator(InstanceBuilder):
         self.batch_size = instance['data'].batch_size
         instance['data'] = instance['data'].to(self.device)
         return instance
-    
+
     def get_instance(self, instance_name:str, num_agents:int=None) -> Dict:
-        
+
         """
         Get an instance with custom number of agents.
 
@@ -234,7 +234,7 @@ class InstanceGenerator(InstanceBuilder):
         Returns:
             Dict: Instance data.
         """
-        
+
         instance = self.instances_data.get(instance_name)
 
         if num_agents is not None:
@@ -252,7 +252,7 @@ class InstanceGenerator(InstanceBuilder):
         td: TensorDict = None,
         variant_preset = None,
     ) -> torch.Tensor:
-        
+
         """
         Subsample variant. If variant_preset is specified, it loads that variant. Otherwise it samples variant's parameters across batches based on probabilities.
 
@@ -267,12 +267,12 @@ class InstanceGenerator(InstanceBuilder):
         Returns:
             td(TensorDict): Environment instance tensor.
         """
-        
+
         td['has_open_routes'] = torch.zeros((*self.batch_size, 1), dtype=torch.bool)
         td['has_time_windows'] = torch.zeros((*self.batch_size, 1), dtype=torch.bool)
         td['has_distance_limits'] = torch.zeros((*self.batch_size, 1), dtype=torch.bool)
         td['has_backhauls'] = torch.zeros((*self.batch_size, 1), dtype=torch.bool)
-        
+
         if variant_preset is not None:
             variant_probs = VARIANT_PROBS_PRESETS.get(variant_preset)
             assert variant_probs is not None, f"Variant preset {variant_preset} not found! \
@@ -299,7 +299,7 @@ class InstanceGenerator(InstanceBuilder):
             td['has_time_windows'][keep_mask[:, 1]] = True
             td['has_distance_limits'][keep_mask[:, 2]] = True
             td['has_backhauls'][keep_mask[:, 3]] = True
-        
+
         else:
             if self.variant_preset in list(VARIANT_PROBS_PRESETS.keys()) and self.variant_preset not in ("all", "cvrp", "single_feat", "single_feat_otw"):
                 cvrp_prob = 0
@@ -336,7 +336,7 @@ class InstanceGenerator(InstanceBuilder):
                     td['has_backhauls'][keep_mask[:, 3]] = True
 
             else:
-                
+
                 keep_mask = torch.zeros((*self.batch_size, 4), dtype=torch.bool)
                 indexes = torch.nonzero(variant_probs).squeeze()
                 keep_mask[:, indexes] = True
@@ -345,7 +345,7 @@ class InstanceGenerator(InstanceBuilder):
                 td['has_time_windows'][keep_mask[:, 1]] = True
                 td['has_distance_limits'][keep_mask[:, 2]] = True
                 td['has_backhauls'][keep_mask[:, 3]] = True
-        
+
         td = self._default_open(td, ~keep_mask[:, 0])
         td = self._default_time_windows(td, ~keep_mask[:, 1])
         td = self._default_distance_limit(td, ~keep_mask[:, 2])
@@ -353,29 +353,29 @@ class InstanceGenerator(InstanceBuilder):
 
         self.keep_mask = keep_mask
 
-        return td    
-    
+        return td
+
 
     def random_generate_instance(
         self,
-        num_agents: int = None,
-        num_nodes: int = None,
-        min_coords: float = None,
-        max_coords: float = None,
-        capacity: float = None,
-        service_time: float = None,
-        min_demands: int = None,
-        max_demands: int = None,
-        min_backhaul: int = None,
-        max_backhaul: int = None,
-        max_time: float = None,
-        backhaul_ratio: float = None,
-        backhaul_class: int = None,
-        sample_backhaul_class: bool = None,
-        max_distance_limit: float = None,
-        speed: float = None,
+        num_agents: Optional[int] = None,
+        num_nodes: Optional[int] = None,
+        min_coords: Optional[float] = None,
+        max_coords: Optional[float] = None,
+        capacity: Optional[float] = None,
+        service_time: Optional[float] = None,
+        min_demands: Optional[int] = None,
+        max_demands: Optional[int] = None,
+        min_backhaul: Optional[int] = None,
+        max_backhaul: Optional[int] = None,
+        max_time: Optional[float] = None,
+        backhaul_ratio: Optional[float] = None,
+        backhaul_class: Optional[int] = None,
+        sample_backhaul_class: Optional[bool] = None,
+        max_distance_limit: Optional[float] = None,
+        speed: Optional[float] = None,
         subsample: bool = True,
-        variant_preset=None,
+        variant_preset: Optional[str] = None,
         use_combinations: bool = False,
         batch_size: Optional[torch.Size] = None,
         seed: int = None,
@@ -488,9 +488,9 @@ class InstanceGenerator(InstanceBuilder):
         instance['is_depot'][:, self.depot_idx] = True
 
         #Start time and end time
-        instance['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1), 
+        instance['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1),
                                                                           dtype=torch.int64, device=self.device)).squeeze(-1)
-        instance['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1), 
+        instance['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
 
         #Distance limits
@@ -499,41 +499,41 @@ class InstanceGenerator(InstanceBuilder):
 
         if self.subsample:
             instance = self.subsample_variant(td=instance, variant_preset=self.variant_preset)
-        
+
         instance_info = {'name': 'random_instance',
                          'num_nodes': num_nodes,
                          'num_agents': num_agents,
                          'data': instance}
-        
+
         return instance_info
 
     def augment_generate_instance(
         self,
-        num_agents: int = None,
-        num_nodes: int = None,
-        min_coords: float = None,
-        max_coords: float = None,
-        capacity: float = None,
-        service_time: float = None,
-        min_demands: int = None,
-        max_demands: int = None,
-        min_backhaul: int = None,
-        max_backhaul: int = None,
-        max_time: float = None,
-        backhaul_ratio: float = None,
-        backhaul_class: int = None,
-        sample_backhaul_class: bool = None,
-        max_distance_limit: float = None,
-        speed: float = None,
+        num_agents: Optional[int] = None,
+        num_nodes: Optional[int] = None,
+        min_coords: Optional[float] = 0.0,
+        max_coords: Optional[float] = 1.0,
+        capacity: Optional[float] = None,
+        service_time: Optional[float] = 0.2,
+        min_demands: Optional[int] = 1,
+        max_demands: Optional[int] = 10,
+        min_backhaul: Optional[int] = 1,
+        max_backhaul: Optional[int] = 10,
+        max_time: Optional[float] = None,
+        backhaul_ratio: Optional[float] = None,
+        backhaul_class: Optional[int] = None,
+        sample_backhaul_class: Optional[bool] = None,
+        max_distance_limit: Optional[float] = None,
+        speed: Optional[float] = None,
         subsample: bool = True,
-        variant_preset=None,
+        variant_preset: Optional[str] = None,
         use_combinations: bool = False,
         batch_size: Optional[torch.Size] = None,
         n_augment:int = 2,
         seed: int = None,
         device: Optional[str] = "cpu"
     ) -> TensorDict:
-        
+
         """
         Generate augmented instance.
 
@@ -566,7 +566,7 @@ class InstanceGenerator(InstanceBuilder):
         Returns:
             TensorDict: Instance data.
         """
-        
+
         if seed is not None:
             self._set_seed(seed)
 
@@ -632,9 +632,9 @@ class InstanceGenerator(InstanceBuilder):
                          'num_nodes': num_nodes,
                          'num_agents': num_agents,
                          'data':instance}
-        
+
         return instance_info
-    
+
     def sample_name_from_set(self, seed:int=None)-> str:
         """
         Sample one instance from instance set.
@@ -650,7 +650,7 @@ class InstanceGenerator(InstanceBuilder):
         assert len(self.set_of_instances)>0, f"set_of_instances has to have at least one instance!"
 
         return list(self.set_of_instances)[torch.randint(0, len(self.set_of_instances), (1,)).item()]
-    
+
     def sample_instance(
         self,
         num_agents: int = 2,
@@ -679,7 +679,7 @@ class InstanceGenerator(InstanceBuilder):
         seed: int = None,
         device: Optional[str] = "cpu"
     ):
-        
+
         """
         Sample one instance from instance space.
 
@@ -713,7 +713,7 @@ class InstanceGenerator(InstanceBuilder):
         Returns:
             TensorDict: Instance data.
         """
-        
+
         if seed is not None:
             self._set_seed(seed)
 
@@ -853,7 +853,7 @@ class InstanceGenerator(InstanceBuilder):
                 seed = self.seed,
                 device = self.device
             )
-            
+
         elif sample_type == 'augment':
             instance_info = self.augment_generate_instance(
                 num_agents = self.num_agents,
@@ -885,7 +885,7 @@ class InstanceGenerator(InstanceBuilder):
             instance_info = self.get_instance(instance_name, num_agents=num_agents)
 
         return instance_info
-        
+
 
     @staticmethod
     def _default_open(td, remove):
@@ -899,12 +899,12 @@ class InstanceGenerator(InstanceBuilder):
         td['time_windows'][remove] = default_tw[remove]
         td['service_time'][remove] = torch.zeros_like(td['service_time'][remove])
         return td
-    
+
     @staticmethod
     def _default_distance_limit(td, remove):
         td['distance_limits'][remove] = float('inf')
         return td
-    
+
     @staticmethod
     def _default_backhaul(td, remove):
         td['linehaul_demands'][remove] = (
@@ -912,7 +912,7 @@ class InstanceGenerator(InstanceBuilder):
         )
         td['backhaul_demands'][remove] = 0
         return td
-    
+
     def generate_demands(self, batch_size: int, num_nodes: int) -> torch.Tensor:
         """
         Generate demands.
@@ -939,7 +939,7 @@ class InstanceGenerator(InstanceBuilder):
         )  # keep only values where they are not linehauls
         linehaul_demand = linehaul_demand * is_linehaul
         return linehaul_demand, backhaul_demand
-    
+
     def generate_backhaul_class(self, shape: Tuple[int, int], sample: bool = False):
         """
         Generate backhaul class.
@@ -955,7 +955,7 @@ class InstanceGenerator(InstanceBuilder):
             return torch.randint(1, 3, shape, dtype=torch.float32)
         else:
             return torch.full(shape, self.backhaul_class, dtype=torch.float32)
-        
+
     def generate_distance_limit(
         self, shape: Tuple[int, int], coords: torch.Tensor
     ) -> torch.Tensor:
@@ -980,9 +980,9 @@ class InstanceGenerator(InstanceBuilder):
         return torch.distributions.Uniform(dist_lower_bound, max_distance_limit).sample()[
             ..., None
         ]
-    
+
     def get_distance(self, x: Tensor, y: Tensor):
-        
+
         """
         Euclidean distance between two tensors of shape `[..., n, dim].
         Taken from: https://github.com/ai4co/rl4co/blob/main/rl4co/utils/ops.py
@@ -995,13 +995,13 @@ class InstanceGenerator(InstanceBuilder):
             torch.Tensor: Distance between x and y.
         """
         return (x - y).norm(p=2, dim=-1)
-    
+
     def generate_time_windows(
         self,
         coords: torch.Tensor = None,
         speed: torch.Tensor = None,
     ) -> torch.Tensor:
-        
+
         """
         Generate time windows.
 
@@ -1012,7 +1012,7 @@ class InstanceGenerator(InstanceBuilder):
         Returns:
             torch.Tensor: Time windows and service times.
         """
-        
+
         batch_size, n_loc = coords.shape[0], coords.shape[1] - 1  # no depot
 
         a, b, c = 0.15, 0.18, 0.2
@@ -1035,15 +1035,14 @@ class InstanceGenerator(InstanceBuilder):
         service_time = torch.cat((torch.zeros(batch_size, 1), service_time), dim=-1)
         return time_windows, service_time  # [B, N+1, 2], [B, N+1]
 
-    
+
 if __name__ == "__main__":
 
     MIXED_PROBLEMS = ["ovrpmb", "ovrpmbl", "ovrpmbltw", "ovrpmbtw",
                       "vrpmb", "vrpmbl", "vrpmbltw", "vrpmbtw"]
-    
 
     number_instances = 2
-    print("Starting validation/test sets generation...")
+    print("Starting validation set generation...")
     print()
 
     for num_nodes, n_agent in [(101, 25), (51, 25)]:
@@ -1053,7 +1052,6 @@ if __name__ == "__main__":
 
             for k in range(number_instances):
 
-                #If problem is mixed, sample instance with another preset and backhaul_class=2
                 if problem not in MIXED_PROBLEMS:
                     instance =  generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset=problem)
                 else:
@@ -1072,51 +1070,13 @@ if __name__ == "__main__":
                     elif problem == "vrpmbltw":
                         instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="vrpbltw", backhaul_class=2)
                     elif problem == "vrpmbtw":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="vrpbtw", backhaul_class=2)
-                    else:
-                        raise Exception("Error generating validation set.")
+                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="vrpmbtw", backhaul_class=2)
 
                 name = f'generated_val_servs_{num_nodes-1}_agents_{n_agent}_{problem}_{k}'
                 instance['name'] = name
-                print("Generating validation data...")
-                if not os.path.exists(f'data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/validation'):
-                    os.makedirs(f'data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/validation')
-                    print(f"Creating directory: data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/validation")
-                with open(f'data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/validation/'+name+'.pkl', 'wb') as fp:
+                if not os.path.exists(f'data/generated/val_servs_{num_nodes-1}_agents_{n_agent}_{problem}'):
+                    os.makedirs(f'data/generated/val_servs_{num_nodes-1}_agents_{n_agent}_{problem}')
+                with open(f'data/generated/val_servs_{num_nodes-1}_agents_{n_agent}_{problem}/'+name+'.pkl', 'wb') as fp:
                     pickle.dump(instance, fp, protocol=pickle.HIGHEST_PROTOCOL)
-                    print(f"Dumped data into: data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/validation/{name}.pkl")
-
-                #If problem is mixed, sample instance with another preset and backhaul_class=2
-                if problem not in MIXED_PROBLEMS:
-                    instance =  generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset=problem)
-                else:
-                    if problem == "ovrpmb":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="ovrpb", backhaul_class=2)
-                    elif problem == "ovrpmbl":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="ovrpbl", backhaul_class=2)
-                    elif problem == "ovrpmbltw":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="ovrpbltw", backhaul_class=2)
-                    elif problem == "ovrpmbtw":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="ovrpbtw", backhaul_class=2)
-                    elif problem == "vrpmb":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="vrpb", backhaul_class=2)
-                    elif problem == "vrpmbl":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="vrpbl", backhaul_class=2)
-                    elif problem == "vrpmbltw":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="vrpbltw", backhaul_class=2)
-                    elif problem == "vrpmbtw":
-                        instance = generator.sample_instance(num_agents=n_agent, num_nodes=num_nodes, variant_preset="vrpbtw", backhaul_class=2)
-                    else:
-                        raise Exception("Error generating test set.")
-                
-                name = f'generated_test_servs_{num_nodes-1}_agents_{n_agent}_{problem}_{k}'
-                instance['name'] = name
-                print("Generating test data...")
-                if not os.path.exists(f'data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/test'):
-                    os.makedirs(f'data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/test')
-                    print(f"Creating directory: data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/test")
-                with open(f'data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/test/'+name+'.pkl', 'wb') as fp:
-                    pickle.dump(instance, fp, protocol=pickle.HIGHEST_PROTOCOL)
-                    print(f"Dumped data into: data/generated/servs_{num_nodes-1}_agents_{n_agent}/{problem}/test/{name}.pkl")
 
     print('Generation completed.')

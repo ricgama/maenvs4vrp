@@ -15,7 +15,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
     MDVRPTW benchmark instance generation class.
     """
     @classmethod
-    def get_list_of_benchmark_instances(cls):
+    def get_list_of_instances(cls):
         """
         Get list of possible instances from benchmark files.
 
@@ -26,21 +26,27 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             None.
         """
         base_dir = path.dirname(path.dirname(path.abspath(__file__)))
+        vidal_dir = path.join(base_dir, BENCHMARK_INSTANCES_PATH, 'Vidal')
+        if not path.isdir(vidal_dir):
+            return {'Vidal': []}
+        return {'Vidal': sorted(s.split('.')[0] for s in os.listdir(vidal_dir) if not s.startswith('.'))}
 
-        return {'Vidal': [s.split('.')[0] for s in os.listdir(path.join(base_dir, BENCHMARK_INSTANCES_PATH, 'Vidal'))]}
-
-    def __init__(self, 
-                 instance_type:str='Vidal', 
-                 set_of_instances:set=None, 
+    def __init__(self,
+                 instance_type:str='Vidal',
+                 set_of_instances:set=None,
+                 instance_name:str=None,
+                 list_of_instances=None,
                  device: Optional[str] = "cpu",
                  batch_size: Optional[torch.Size] = None,
                  seed:int=None) -> None:
         """
         Constructor. Create an instance space of one or several sets of data.
-        
-        Args:       
+
+        Args:
             instance_type(str): Instance type. Can be "Solomon" or "Homberger". Defaults to "Solomon".
             set_of_instances(set): Set of instances file names. Defaults to None.
+            instance_name(str): Alias for instance_type. Defaults to None.
+            list_of_instances: Alias for set_of_instances. Defaults to None.
             device(str, optional): Type of processing. It can be "cpu" or "gpu". Defaults to "cpu".
             batch_size(torch.Size, optional): Batch size. If not specified, defaults to 1.
             seed(int): Random number generator seed. Defaults to None.
@@ -54,6 +60,11 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             self._set_seed(self.DEFAULT_SEED)
         else:
             self._set_seed(seed)
+
+        if instance_name is not None:
+            instance_type = instance_name
+        if list_of_instances is not None:
+            set_of_instances = list_of_instances
 
         self.device = device
         if batch_size is None:
@@ -77,7 +88,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         Args:
             instance_name(str): Instance file name.
 
-        Returns: 
+        Returns:
             Dict: Instance data.
         """
 
@@ -110,8 +121,8 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         instance['name'] = instance_name
 
         instance['num_agents'] = int(instance_data[0][1])
-        instance['num_nodes'] = int(instance_data[0][2])  +  int(instance_data[0][3]) 
-        instance['num_depots'] = int(instance_data[0][3]) 
+        instance['num_nodes'] = int(instance_data[0][2])  +  int(instance_data[0][3])
+        instance['num_depots'] = int(instance_data[0][3])
 
         coords = []
         demands = []
@@ -143,11 +154,11 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         data['tw_high'] = time_windows[:, :, 1].clone()
 
         data['service_time'] = torch.tensor(service_time, dtype = torch.float, device=self.device).unsqueeze(0)
-        data['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1), 
+        data['start_time'] = time_windows[:, :, 0].gather(1, torch.zeros((*self.batch_size, 1),
                                                                           dtype=torch.int64, device=self.device)).squeeze(-1)
-        data['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1), 
+        data['end_time'] = time_windows[:, :, 1].gather(1, torch.zeros((*self.batch_size, 1),
                                                                         dtype=torch.int64, device=self.device)).squeeze(-1)
-
+        data['speed'] = torch.ones((*self.batch_size, 1), dtype=torch.float, device=self.device)
 
         data['is_depot'] = torch.zeros((*self.batch_size, instance['num_nodes']), dtype=torch.bool, device=self.device)
         data['is_depot'][:, self.depot_idx] = True
@@ -182,7 +193,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
     def load_set_of_instances(self, set_of_instances:set=None):
         """
         Load every instance on set_of_instances set.
-        
+
         Args:
             set_of_instances(set): Set of instances file names. Defaults to None.
 
@@ -194,22 +205,23 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         self.instances_data = dict()
         for instance_name in self.set_of_instances:
             instance = self.read_instance_data(instance_name)
-            self.instances_data[instance_name] = instance            
+            self.instances_data[instance_name] = instance
 
 
-    def sample_first_n_services(self, 
+    def sample_first_n_services(self,
                                instance_name:str=None,
-                                num_agents:int=None, 
+                                num_agents:int=None,
                                 num_nodes:int=None,
+                                speed:float=None,
                                 device:Optional[str]="cpu")-> Dict:
         """
-        Sample first n nodes. 
+        Sample first n nodes.
 
         Args:
             instance_name(str): Instance file name. Defaults to None.
             num_agents(int): Total number of agents. Defaults to None.
             num_nodes(int): Total number of (n) nodes intended. Defaults to None.
-
+            speed(float): Vehicles' speed. Defaults to None.
         Returns:
             Dict: New instance of the first n nodes.
         """
@@ -227,7 +239,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             new_instance['num_nodes'] = instance['num_nodes']
 
         new_instance['name'] = instance['name'] + '_samp'
-        new_instance['n_digits'] = instance['n_digits'] 
+        new_instance['n_digits'] = instance['n_digits']
         data = instance['data']
 
         idxs = torch.arange(0, instance['num_nodes'], device=self.device)
@@ -245,15 +257,17 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         new_data['start_time'] = data['start_time']
         new_data['end_time'] = data['end_time']
         new_data['is_depot'] = data['is_depot'][:, index]
+        new_data['speed'] = data['speed']
 
         new_instance['data'] = new_data
 
         return new_instance
 
-    def random_sample_instance(self, 
+    def random_sample_instance(self,
                                instance_name:str=None,
-                               num_agents:int=None, 
-                               num_nodes:int=None, 
+                               num_agents:int=None,
+                               num_nodes:int=None,
+                               speed:float=None,
                                num_depots:int=None,
                                seed:int=None,
                                device:Optional[str]="cpu")-> Dict:
@@ -265,7 +279,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             num_agents(int):  Total number of agents. Defaults to None.
             num_nodes(int):  Total number of nodes. Defaults to None.
             seed(int): Random number generator seed. Defaults to None.
-
+            speed(float): Vehicles' speed. Defaults to None.
         Returns:
             Dict: Instance data.
         """
@@ -286,7 +300,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
 
         new_instance['name'] = instance['name'] + '_samp'
 
-        new_instance['n_digits'] = instance['n_digits'] 
+        new_instance['n_digits'] = instance['n_digits']
 
         data = instance['data']
         idxs = torch.arange(0, instance['num_nodes'], device=self.device).unsqueeze(0)
@@ -304,6 +318,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         new_data['start_time'] = data['start_time']
         new_data['end_time'] = data['end_time']
         new_data['is_depot'] = data['is_depot'][:, index]
+        new_data['speed'] = data['speed']
 
         new_instance['data'] = new_data
         return new_instance
@@ -324,11 +339,12 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
 
         return list(self.set_of_instances)[torch.randint(0, len(self.set_of_instances), (1,)).item()]
 
-    def sample_instance(self, num_agents:int=None, 
+    def sample_instance(self, num_agents:int=None,
                         num_nodes:int=None,
-                        capacity:int=None, 
-                        service_times:float=None, 
-                        instance_name:str=None, 
+                        capacity:int=None,
+                        service_times:float=None,
+                        speed:float=None,
+                        instance_name:str=None,
                         sample_type:str='random',
                         batch_size: Optional[torch.Size] = None,
                         n_augment: Optional[int] = None,
@@ -342,6 +358,7 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
             num_nodes(int): Total number of nodes. Defaults to None.
             capacity(int): Capacity of the agents. Defaults to None.
             service_times(float): Service time in the nodes. Defaults to None.
+            speed(float): Vehicles' speed. Defaults to None.
             instance_name(str): Instance name. Defaults to None.
             sample_type(str): Sample type. It can be "random" or something else for "first n". Defaults to "random".
             batch_size(torch.Size or None): Batch size. Defaults to None.
@@ -353,6 +370,10 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
         """
         if seed is not None:
             self._set_seed(seed)
+        if speed is None:
+            self.speed = 1.0
+        else:
+            self.speed = speed
 
         if instance_name==None:
             instance_name = self.sample_name_from_set(seed=seed)
@@ -361,15 +382,17 @@ class BenchmarkInstanceGenerator(InstanceBuilder):
 
         if sample_type=='random':
             instance = self.random_sample_instance(instance_name=instance_name,
-                                                   num_agents=num_agents, 
+                                                   num_agents=num_agents,
                                                    num_nodes=num_nodes,
+                                                   speed=self.speed,
                                                    seed=seed,
                                                    device=device)
         else:
             # sample first n
             instance = self.sample_first_n_services(instance_name=instance_name,
-                                                    num_agents=num_agents, 
+                                                    num_agents=num_agents,
                                                     num_nodes=num_nodes,
+                                                    speed=self.speed,
                                                     device=device)
 
         return instance
