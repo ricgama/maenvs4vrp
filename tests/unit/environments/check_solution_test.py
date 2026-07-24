@@ -4,7 +4,7 @@ import torch
 
 from maenvs4vrp.core import env
 
-ENVIRONMENT_LIST = ['cvrp', 'cvrpstw', 'cvrptw', 'dsvrptw', 'dvrptw', 'hcvrp', 'mdvrptw', 'pcvrp', 'pdptw', 'pcvrptw', 'sdvrptw', 'top', 'toptw', 'rcvrp' , 'rcvrptw', 'rmtsp']
+ENVIRONMENT_LIST = ['cvrp', 'cvrpstw', 'cvrptw', 'dsvrptw', 'dvrptw', 'hcvrp', 'mdvrptw', 'pcvrp', 'pdptw', 'pcvrptw', 'sdvrptw', 'top', 'toptw']
 
 DEFAULT_DEVICE = "cpu"
 DEFAULT_BATCH_SIZE = 1
