@@ -208,14 +208,22 @@ Install uv:
 Installation
 ------------
 
-Clone the repository and install the package:
+The easiest way to install MAEnvs4VRP is directly from PyPI:
+
+.. code:: shell
+
+    pip install maenvs4vrp
+
+**Development installation** (to also run notebooks, training scripts, and tests):
+
+Clone the repository and install with ``uv``:
 
 .. code:: shell
 
     git clone https://github.com/MAEnvs4VRP/maenvs4vrp.git && cd maenvs4vrp
     uv sync
 
-That's it! ``uv sync`` automatically:
+``uv sync`` automatically:
 
 - Creates a virtual environment in ``.venv/``
 - Installs Python 3.13.5 (if needed)
