@@ -204,5 +204,7 @@ maenvs4vrp/parallel_environments/toptw/instances_generator.py
 maenvs4vrp/parallel_environments/toptw/observations.py
 maenvs4vrp/parallel_environments/toptw/toy_instance_generator.py
 maenvs4vrp/utils/__init__.py
+maenvs4vrp/utils/augment_utils.py
+maenvs4vrp/utils/ops.py
 maenvs4vrp/utils/plotting.py
 maenvs4vrp/utils/utils.py
